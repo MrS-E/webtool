@@ -20,6 +20,13 @@ model User {
   auth      String
   passwords Password[]
   notes     Note[]
+  token     Token[]
+}
+
+model Token {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String @db.ObjectId
 }
 
 model Password {

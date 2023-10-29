@@ -30,4 +30,10 @@ export class PasswordsController {
   create(@Body() createPasswordsDTO: CreatePasswordsDTO) {
     return createPasswordsDTO;
   }
+
+  @Put()
+  update() {}
+
+  @Delete()
+  delete() {}
 }

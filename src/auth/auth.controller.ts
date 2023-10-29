@@ -1,29 +1,17 @@
 import { Body, Controller, Post, Res } from '@nestjs/common';
 import CreateTokenDTO from './dto/CreateTokenDTO';
-import { PrismaClient, Token, User } from '@prisma/client';
-import bcrypt from 'bcrypt';
+import { Token } from '@prisma/client';
 import { Response } from 'express';
+import { AuthService } from './auth.service';
 
-const db: PrismaClient = new PrismaClient();
 @Controller('auth')
 export class AuthController {
+  constructor(private readonly authService: AuthService) {}
   @Post()
-  async createToken(
+  createToken(
     @Body() createToken: CreateTokenDTO,
     @Res() res: Response,
   ): Promise<Token | number> {
-    const user: User = await db.user.findUnique({
-      where: { email: createToken.email },
-    });
-
-    if (
-      await bcrypt.compare(
-        user.auth,
-        await bcrypt.hash(createToken.password, 10),
-      )
-    ) {
-      return await db.token.create({ data: { author: user } });
-    }
-    res.send(401);
+    return this.authService.createToken(createToken, res);
   }
 }

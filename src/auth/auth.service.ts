@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient, Token, User } from '@prisma/client';
 import bcrypt from 'bcrypt';
+import {Response} from 'express';
+import CreateTokenDTO from "./dto/CreateTokenDTO";
 
 const db: PrismaClient = new PrismaClient();
 
 @Injectable()
 export class AuthService {
-  async createToken(createToken, res) {
+  async createToken(createToken: CreateTokenDTO, res : Response) : Promise<Response|string> {
     const user: User = await db.user.findUnique({
       where: { email: createToken.email },
     });
@@ -17,8 +19,9 @@ export class AuthService {
         await bcrypt.hash(createToken.password, 10),
       )
     ) {
-      const token = await db.token.create({ data: { author: user } });
+      const token : Token = await db.token.create({ data: { authorId: user.id } });
+      return token.id.toString();
     }
-    res.send(401);
+    return res.send(401);
   }
 }

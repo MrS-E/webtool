@@ -10,7 +10,9 @@ export class UserService {
     return new Promise((resolve, reject)=> {
       db.user.create({ data: createUser })
         .then(() => resolve(201))
-        .catch(() => reject(505))
+        .catch((error) => {
+          console.error(error)
+          reject(505)})
     })
   }
 }

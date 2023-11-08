@@ -1,0 +1,10 @@
+GET localhost:3000/auth
+
+###
+POST localhost:3000/auth
+Content-Type: application/json
+
+{
+  "email": "081123@ssd.com",
+  "password": "123"
+}

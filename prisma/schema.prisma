@@ -27,6 +27,7 @@ model Token {
   id       String @id @default(auto()) @map("_id") @db.ObjectId
   author   User   @relation(fields: [authorId], references: [id])
   authorId String @db.ObjectId
+  createdAt DateTime   @default(now())
 }
 
 model Password {

@@ -29,4 +29,23 @@ export class AuthService {
     }
     return res.send(401);
   }
+
+  checkToken(id: string): Promise<boolean|number> {
+    return new Promise((resolve, reject)=>{
+      db.token.findUnique({
+        where: {
+          id: id,
+        }
+      }).then((token: Token)=>{
+        let diff: number = (new Date().getTime() - new Date(token.createdAt).getTime()) / 1000;
+        diff /= 60 * 60;
+        console.log(diff)
+        if (diff < 5) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      }).catch(()=>reject(500))
+    })
+  }
 }

@@ -15,4 +15,11 @@ export class AuthController {
   ): Promise<Response> {
     return await this.authService.createToken(createToken, res);
   }
+
+  @Get(':id')
+  async checkToken(
+    @Param('id') id:string
+  ): Promise<boolean|number>{
+    return await this.authService.checkToken(id)
+  }
 }

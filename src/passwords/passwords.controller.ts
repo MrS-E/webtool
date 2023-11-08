@@ -5,8 +5,6 @@ import {
   Put,
   Delete,
   Body,
-  Param,
-  Res,
   HttpCode, Req
 } from "@nestjs/common";
 import CreatePasswordsDTO from './dto/CreatePasswordsDTO';

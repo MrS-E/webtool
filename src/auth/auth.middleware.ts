@@ -4,7 +4,7 @@ import { AuthService } from "./auth.service";
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
   use(req: any, res: any, next: () => void) {
-    const id = req.headers.authToken
+    const id = req.headers["authentication-token"]
     new AuthService().checkToken(id)
       .then((auth: boolean)=>{
         if(auth) next()

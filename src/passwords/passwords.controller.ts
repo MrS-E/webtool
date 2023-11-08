@@ -7,26 +7,26 @@ import {
   Body,
   Param,
   Res,
-  HttpCode
+  HttpCode, Req
 } from "@nestjs/common";
 import CreatePasswordsDTO from './dto/CreatePasswordsDTO';
 import { PasswordsService } from './passwords.service';
-import { Password } from './interface/passwords.interface';
+import { Password } from '@prisma/client';
+import { Request } from "express";
 
 @Controller('passwords')
 export class PasswordsController {
   constructor(private readonly passwortService: PasswordsService) {}
 
   @Get()
-  getAll(): Password[] {
-    return this.passwortService.getAll();
+  async getAll(@Req() req: Request): Promise<Password[]> {
+    const token: string = <string>req.headers["authentication-token"]
+    return await this.passwortService.getAll(token);
   }
 
   @Get(':id')
   @HttpCode(501)
-  get(@Param() param, @Res() res) {
-    return res.send(404);
-  }
+  get() {}
 
   @Post()
   @HttpCode(501)

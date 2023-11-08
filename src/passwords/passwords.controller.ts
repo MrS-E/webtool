@@ -7,7 +7,8 @@ import {
   Body,
   Param,
   Res,
-} from '@nestjs/common';
+  HttpCode
+} from "@nestjs/common";
 import CreatePasswordsDTO from './dto/CreatePasswordsDTO';
 import { PasswordsService } from './passwords.service';
 import { Password } from './interface/passwords.interface';
@@ -22,18 +23,22 @@ export class PasswordsController {
   }
 
   @Get(':id')
-  find(@Param() param, @Res() res) {
+  @HttpCode(501)
+  get(@Param() param, @Res() res) {
     return res.send(404);
   }
 
   @Post()
+  @HttpCode(501)
   create(@Body() createPasswordsDTO: CreatePasswordsDTO) {
     return createPasswordsDTO;
   }
 
   @Put()
+  @HttpCode(501)
   update() {}
 
   @Delete()
+  @HttpCode(501)
   delete() {}
 }

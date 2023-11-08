@@ -1,0 +1,9 @@
+POST localhost:3000/user
+Content-Type: application/json
+
+{
+  "firstname": "asdf",
+  "lastname": "meier",
+  "email": "081123@ssd.com",
+  "auth": "123"
+}

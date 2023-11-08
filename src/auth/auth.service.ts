@@ -30,7 +30,7 @@ export class AuthService {
     return res.send(401);
   }
 
-  checkToken(id: string): Promise<boolean|number> {
+  checkToken(id: string): Promise<boolean> {
     return new Promise((resolve, reject)=>{
       db.token.findUnique({
         where: {

@@ -19,7 +19,7 @@ export class AuthController {
   @Get(':id')
   async checkToken(
     @Param('id') id:string
-  ): Promise<boolean|number>{
+  ): Promise<boolean>{
     return await this.authService.checkToken(id)
   }
 }

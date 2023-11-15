@@ -11,9 +11,8 @@ export class AuthController {
   @Post()
   async createToken(
     @Body() createToken: CreateTokenDTO,
-    @Res() res: Response,
   ): Promise<string|number> {
-    return await this.authService.createToken(createToken, res)
+    return await this.authService.createToken(createToken)
       .catch((e)=>!(e instanceof Error)?e:500)
   }
 

@@ -8,12 +8,12 @@ const db: PrismaClient = new PrismaClient();
 
 @Injectable()
 export class AuthService {
-  createToken(createToken: CreateTokenDTO, res: Response,): Promise<string> {
+  createToken(createToken: CreateTokenDTO): Promise<string> {
     return new Promise(async (resolve, reject) => {
       try{
         const user: User = await db.user.findUnique({
           where: { email: createToken.email },
-        }).catch((error=>{throw new SearchError("not found")}));
+        }).catch((()=>{throw new SearchError("not found")}));
 
         if (await bcrypt.compare(user.auth, await bcrypt.hash(createToken.password, 10))) {
           const token: Token = await db.token.create({

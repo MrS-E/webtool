@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient, Token, User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
-import {Response} from 'express';
+
 import CreateTokenDTO from "./dto/CreateTokenDTO";
 
 const db: PrismaClient = new PrismaClient();

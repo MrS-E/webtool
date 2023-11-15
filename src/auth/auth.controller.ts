@@ -12,8 +12,9 @@ export class AuthController {
   async createToken(
     @Body() createToken: CreateTokenDTO,
     @Res() res: Response,
-  ): Promise<Response> {
-    return await this.authService.createToken(createToken, res);
+  ): Promise<string|number> {
+    return await this.authService.createToken(createToken, res)
+      .catch((e)=>!(e instanceof Error)?e:500)
   }
 
   @Get(':id')

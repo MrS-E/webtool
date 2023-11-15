@@ -7,7 +7,7 @@ import UpdatePasswordsDTO from "./dto/UpdatePasswordsDTO";
 export class PasswordsService {
   private readonly db: PrismaClient = new PrismaClient();
 
-  async getUserID(token: string):Promise<string> {
+  private async getUserID(token: string):Promise<string> {
     return await Promise.allSettled([new Promise((resolve, reject) => this.db.token.findUnique({ where: { id: token } }).then((tokenObj: Token) => resolve(tokenObj.authorId)).catch((error: any) => reject(error)))])[0];
   }
 
@@ -47,18 +47,20 @@ export class PasswordsService {
   }
 
   update(token:string, passwordDTO: UpdatePasswordsDTO):Promise<null>{
-    return new Promise((resolve, reject)=>{
-      this.db.password.update({where:{id: passwordDTO.id}, data: passwordDTO})
-        .then(()=>resolve(null))
-        .catch(error=>reject(error))
+    return new Promise(async (resolve, reject) => {
+      const userId: string = await this.getUserID(token)
+      this.db.password.update({ where: { id: passwordDTO.id, authorId: userId }, data: passwordDTO })
+        .then(() => resolve(null))
+        .catch(error => reject(error))
     })
   }
 
   delete(token:string, id:string): Promise<null>{
-    return new Promise((resolve, reject)=>{
-      this.db.password.delete({where:{id:id}})
-        .then(()=>resolve(null))
-        .catch(error=>reject(error))
+    return new Promise(async (resolve, reject) => {
+      const userId: string = await this.getUserID(token)
+      this.db.password.delete({ where: { id: id, authorId: userId } })
+        .then(() => resolve(null))
+        .catch(error => reject(error))
     })
   }
 }

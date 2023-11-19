@@ -1,25 +1,28 @@
 class fetchClass{
     private url :string
-    private method: Method
-    private headers : Object
+    private method: keyof typeof fetchClass.Method
+    private headers : HeadersInit
     private body : string
     private readonly abortController :AbortController  = new AbortController()
     private readonly abortSignal :AbortSignal = this.abortController.signal
+    private mode : RequestMode
 
-    constructor(url: string , method: string, headers: Object, body: string) {
+    constructor(url: string , init : {method: keyof typeof fetchClass.Method, headers: HeadersInit|null, body: string|null, mode:valueof<typeof fetchClass.Mode>}) {
         this.url = url
-        this.method = Method[method as keyof typeof Method]
-        this.headers = headers?headers:{}
-        this.body = body?body:""
+        this.method = init.method
+        this.headers = init.headers?init.headers:<HeadersInit><unknown>null
+        this.body = init.body?init.body:<string><unknown>null
+        this.mode = init.mode?<RequestMode>init.mode:<RequestMode>"cors"
     }
 
     exec() : Promise<Response> {
         return new Promise((resolve, reject)=>{
             fetch(encodeURI(this.url), {
                 signal: this.abortSignal,
-                method : <string>this.method,
-                headers : <HeadersInit>this.headers,
-                body : this.body
+                method: <string>this.method,
+                headers: this.headers,
+                mode: this.mode,
+                body: this.body
             })
                 .then(res=>resolve(res))
                 .catch(e=>reject(e))
@@ -48,11 +51,26 @@ class fetchClass{
         this.abortController.abort()
     }
 
+    static Method = {
+        GET: "GET",
+        POST: "POST",
+        PUT: "PUT",
+        DELETE: "DELETE"
+    } as const
+
+    static Mode = {
+        CORS: "cors",
+        NAVIGATE: "navigate",
+        NO_CORS: "no-cors",
+        SAME_ORIGIN: "same-origin"
+    } as const;
+
     static Builder = class {
-        private url : string
-        private method: Method | null = null
-        private headers : Object | null = null
-        private body : string | null = null
+         url : string
+         method: keyof typeof fetchClass.Method = fetchClass.Method.GET
+         headers : HeadersInit = <HeadersInit><unknown>null
+         body : string = <string><unknown>null
+         mode: valueof<typeof fetchClass.Mode> = fetchClass.Mode.CORS;
 
         constructor(url:string) {
             this.url = url
@@ -62,32 +80,27 @@ class fetchClass{
             this.url = url
         }
 
-        setMethode(method: string){
-            this.method = Method[method as keyof typeof Method]
+        setMethode(method: "GET"|"POST"|"PUT"|"DELETE"){
+            this.method = fetchClass.Method[method]
         }
 
         setHeaders(headers: Object){
-            this.headers = headers
+            this.headers = <HeadersInit>headers
         }
 
         setBody(body: Object){
             this.body = JSON.stringify(body)
         }
 
+        setMode(mode: "cors" | "navigate" | "no-cors" | "same-origin"){
+             this.mode = <RequestMode>mode
+        }
+
         build(): fetchClass{
-            if(!this.method) this.method = Method.Get
-            if(!this.body) this.body = ""
-            if(!this.headers) this.headers={}
-            return new fetchClass(this.url, this.method, this.headers, this.body)
+            return new fetchClass(this.url, {method: this.method, headers:this.headers, body:this.body, mode:this.mode})
         }
     }
 }
 
-enum Method {
-    Get = "GET",
-    Post = "POST",
-    Put = "PUT",
-    Delete = "DELETE"
-}
-
+type valueof<T> = T[keyof T];
 export default fetchClass

@@ -1,4 +1,5 @@
 import {useEffect, useState} from "react";
+import fetch from "../classes/fetch.ts";
 
 function useFetch(url:string, methode : any|null|undefined, header:any|null|undefined, body:any|null|undefined, exec: boolean){
     const [data, setData] = useState<any|null>(null)
@@ -6,29 +7,25 @@ function useFetch(url:string, methode : any|null|undefined, header:any|null|unde
     const [error, setError] = useState<any|null>(null)
 
     useEffect(()=>{
+        const builder = new fetch.Builder(url)
+        builder.setMethode(methode)
+        builder.setHeaders(header)
+        builder.setBody(body)
         if(exec) {
             setLoading(true)
 
-            const abort = new AbortController();
-            const signal = abort.signal;
+            const fetch = builder.build()
 
-            fetch(encodeURI(url), {
-                signal,
-                method: methode ? methode : "GET",
-                headers: header ? header : undefined,
-                body: body ? JSON.stringify(body) : undefined
-            })
-                .then(res => res.json())
-                .then(res => setData(res))
-                .catch(e => setError(e))
-                .finally(() => setLoading(false))
+            fetch.json()
+                .then(res=>setData(res))
+                .catch(e=>setError(e))
+                .finally(()=>setLoading(false))
 
-            return () => abort.abort();
+            return () => fetch.abort();
         }
     }, [url, exec])
 
     return {loading, data, error}
-
 }
 
 export default useFetch

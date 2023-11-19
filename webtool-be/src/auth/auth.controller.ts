@@ -16,6 +16,7 @@ export class AuthController {
     }catch (e) {
       throw new HttpException({
         status: e.status,
+        cause: e.cause
       }, e.status, {
         cause: e.error
       });

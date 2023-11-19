@@ -6,7 +6,7 @@ class fetchClass{
     private readonly abortController :AbortController  = new AbortController()
     private readonly abortSignal :AbortSignal = this.abortController.signal
 
-    constructor(url: string , method: string, headers: Object|null, body: string|null) {
+    constructor(url: string , method: string, headers: Object, body: string) {
         this.url = url
         this.method = Method[method as keyof typeof Method]
         this.headers = headers?headers:{}
@@ -51,7 +51,7 @@ class fetchClass{
     static Builder = class {
         private url : string
         private method: Method | null = null
-        private headers : any = null
+        private headers : Object | null = null
         private body : string | null = null
 
         constructor(url:string) {
@@ -76,6 +76,8 @@ class fetchClass{
 
         build(): fetchClass{
             if(!this.method) this.method = Method.Get
+            if(!this.body) this.body = ""
+            if(!this.headers) this.headers={}
             return new fetchClass(this.url, this.method, this.headers, this.body)
         }
     }

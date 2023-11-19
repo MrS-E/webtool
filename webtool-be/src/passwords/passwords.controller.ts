@@ -17,7 +17,7 @@ import UpdatePasswordsDTO from "./dto/UpdatePasswordsDTO";
 export class PasswordsController {
   constructor(private readonly passwortService: PasswordsService) {}
 
-  async trycatch(func: Function,) :Promise<any> {
+  async trycatch(func: Function) :Promise<any> {
     try {
       return await func()
     } catch (e) {
@@ -29,33 +29,32 @@ export class PasswordsController {
     }
   }
 
+  getToken(req: Request):string{
+    return <string>req.headers["authentication-token"]
+  }
+
   @Get()
   async getAll(@Req() req: Request): Promise<Password[]> {
-    const token: string = <string>req.headers["authentication-token"]
-    return await this.trycatch(async () => await this.passwortService.getAll(token))
+    return await this.trycatch(async () => await this.passwortService.getAll(this.getToken(req)))
   }
 
   @Get(':id')
   async get(@Param('id') id: string, @Req() req: Request):Promise<Password> {
-    const token: string = <string>req.headers["authentication-token"]
-    return await this.trycatch(async () => await this.passwortService.get(token, id))
+    return await this.trycatch(async () => await this.passwortService.get(this.getToken(req), id))
   }
 
   @Post()
   async create(@Body() createPasswordsDTO: CreatePasswordsDTO, @Req() req: Request): Promise<HttpStatus> {
-    const token: string = <string>req.headers["authentication-token"]
-    return await this.trycatch(async () => await this.passwortService.create(token, createPasswordsDTO))
+    return await this.trycatch(async () => await this.passwortService.create(this.getToken(req), createPasswordsDTO))
   }
 
   @Put()
   async update(@Body() updatePasswordDTO: UpdatePasswordsDTO, @Req() req: Request):Promise<HttpStatus> {
-    const token: string = <string>req.headers["authentication-token"]
-    return await this.trycatch(async () => await this.passwortService.update(token, updatePasswordDTO))
+    return await this.trycatch(async () => await this.passwortService.update(this.getToken(req), updatePasswordDTO))
   }
 
   @Delete(':id')
   async delete(@Param('id') id: string, @Req() req: Request):Promise<HttpStatus> {
-    const token: string = <string>req.headers["authentication-token"]
-    return await this.trycatch(async () => await this.passwortService.delete(token, id))
+    return await this.trycatch(async () => await this.passwortService.delete(this.getToken(req), id))
     }
 }

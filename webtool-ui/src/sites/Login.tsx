@@ -1,23 +1,24 @@
 import Form from '../components/Form.tsx'
 import Input from "../components/FormInput.tsx";
 import {useState} from "react";
-import useFetch from "../hooks/useFetch.ts";
+import fetch from "../classes/fetch.ts";
+import {useCookies} from "react-cookie";
 
 
 function Login () :JSX.Element  {
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
-    const [exec, setExec] = useState<boolean>(false)
-    const post = useFetch(
-        "http://localhost:3000/auth",
-        "POST",
-        null,
-        {email:email, password:password},
-        exec
-    )
+    const [, setCookie] = useCookies(["token"]);
 
-    const handleSubmit=()=>{
-        setExec(true)
+    const handleSubmit=()=> {
+        const builder = new fetch.Builder("/auth")
+        builder.setBody({email:email, password:password})
+        builder.setMethode("POST")
+
+        builder.build().json()
+            .then(res=> setCookie("token", res, {path: "/"}))
+            .catch(e=>console.error(e))
+
     }
 
     return (
@@ -28,6 +29,6 @@ function Login () :JSX.Element  {
             </Form>
         </>
     );
-};
+}
 
 export default Login;

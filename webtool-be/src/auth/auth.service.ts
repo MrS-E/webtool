@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {HttpStatus, Injectable} from '@nestjs/common';
 import { PrismaClient, Token, User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
@@ -25,9 +25,9 @@ export class AuthService {
         }
       }
       catch (error){
-        if(error instanceof SearchError) reject(404)
-        if(error instanceof UnauthorizedError) reject(401)
-        reject(error)
+        if(error instanceof SearchError) reject({status: HttpStatus.NOT_FOUND, cause: error.message, error: error})
+        if(error instanceof UnauthorizedError) reject({status: HttpStatus.UNAUTHORIZED, cause: error.message, error: error})
+        reject({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: error.message, error: error})
       }
     })
   }
@@ -36,7 +36,8 @@ export class AuthService {
     return new Promise((resolve, reject)=>{
       db.token.findUnique({ where: {
           id: id,
-        }}).then((token: Token)=>{
+        }})
+          .then((token: Token)=>{
         let diff: number = ((new Date().getTime() - new Date(token.createdAt).getTime()) / 1000)/(60*60);
         //diff /= 60 * 60;
         //console.log(diff)
@@ -45,7 +46,8 @@ export class AuthService {
         } else {
           resolve(false);
         }
-      }).catch(()=>reject(500))
+      })
+          .catch((error)=>reject({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: error.message, error: error}))
     })
   }
 }

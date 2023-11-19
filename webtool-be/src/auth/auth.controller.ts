@@ -1,4 +1,4 @@
-import {Body, Controller, Get, HttpException, HttpStatus, Param, Post} from "@nestjs/common";
+import {Body, Controller, Get, HttpException, Param, Post} from "@nestjs/common";
 import CreateTokenDTO from './dto/CreateTokenDTO';
 import { AuthService } from './auth.service';
 

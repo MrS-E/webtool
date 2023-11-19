@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {HttpStatus, Injectable} from '@nestjs/common';
 import CreateUserDTO from "./dto/CreateUserDTO";
 import { PrismaClient } from "@prisma/client";
 import * as bcrypt from 'bcrypt';
@@ -11,11 +11,8 @@ export class UserService {
     return new Promise(async (resolve, reject) => {
         createUser.auth = await bcrypt.hash(createUser.auth, 10)
         db.user.create({data: createUser})
-            .then(() => resolve(201))
-            .catch((error) => {
-                console.error(error)
-                reject(505)
-            })
+            .then(() => resolve(HttpStatus.CREATED))
+            .catch((error) => reject({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: error.message, error: error}))
     })
   }
 }

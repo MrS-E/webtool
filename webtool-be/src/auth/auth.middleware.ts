@@ -1,4 +1,4 @@
-import { Injectable, NestMiddleware } from '@nestjs/common';
+import {HttpException, HttpStatus, Injectable, NestMiddleware} from '@nestjs/common';
 import { AuthService } from "./auth.service";
 
 @Injectable()
@@ -8,8 +8,17 @@ export class AuthMiddleware implements NestMiddleware {
     new AuthService().checkToken(id)
       .then((auth: boolean)=>{
         if(auth) next()
-        res.send(401)
+
+        throw new HttpException({
+          status:HttpStatus.UNAUTHORIZED,
+            error: "Token not noticeable or to old"
+        }, HttpStatus.UNAUTHORIZED)
+
       })
-      .catch(()=>res.send(401))
+      .catch((e)=>{
+          throw new HttpException({
+          status:HttpStatus.INTERNAL_SERVER_ERROR,
+      }, HttpStatus.INTERNAL_SERVER_ERROR, {cause: e})
+      })
   }
 }

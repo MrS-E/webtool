@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaClient, Token, Password} from "@prisma/client";
+import {HttpStatus, Injectable} from '@nestjs/common';
+import {Password, PrismaClient, Token} from "@prisma/client";
 import CreatePasswordsDTO from "./dto/CreatePasswordsDTO";
 import UpdatePasswordsDTO from "./dto/UpdatePasswordsDTO";
 
@@ -16,7 +16,7 @@ export class PasswordsService {
       const userId:string = await this.getUserID(token)
       this.db.password.findMany({where:{authorId: userId}})
         .then((passwords : Password[])=>resolve(passwords))
-        .catch((error:any)=>reject(error))
+        .catch((error)=>reject({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: error.message, error: error}))
     })
   }
 
@@ -25,11 +25,11 @@ export class PasswordsService {
       const userId: string = await this.getUserID(token)
       this.db.password.findUnique({where:{authorId: userId, id: id}})
         .then((password : Password)=>resolve(password))
-        .catch((error:any)=>reject(error))
+        .catch((error:any)=>reject({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: error.message, error: error}))
     })
   }
 
-  create(token:string, passwordDTO: CreatePasswordsDTO):Promise<null>{
+  create(token:string, passwordDTO: CreatePasswordsDTO):Promise<HttpStatus>{
     return new Promise(async (resolve, reject) => {
       const userId: string = await this.getUserID(token)
       this.db.password.create({data:{
@@ -41,26 +41,26 @@ export class PasswordsService {
           password: passwordDTO.password,
           authorId: userId
         }})
-        .then(()=>resolve(null))
-        .catch(error=>reject(error))
+        .then(()=>resolve(HttpStatus.CREATED))
+        .catch(error=>reject({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: error.message, error: error}))
     })
   }
 
-  update(token:string, passwordDTO: UpdatePasswordsDTO):Promise<null>{
+  update(token:string, passwordDTO: UpdatePasswordsDTO):Promise<HttpStatus>{
     return new Promise(async (resolve, reject) => {
       const userId: string = await this.getUserID(token)
       this.db.password.update({ where: { id: passwordDTO.id, authorId: userId }, data: passwordDTO })
-        .then(() => resolve(null))
-        .catch(error => reject(error))
+        .then(() => resolve(HttpStatus.ACCEPTED))
+        .catch(error => reject({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: error.message, error: error}))
     })
   }
 
-  delete(token:string, id:string): Promise<null>{
+  delete(token:string, id:string): Promise<HttpStatus>{
     return new Promise(async (resolve, reject) => {
       const userId: string = await this.getUserID(token)
       this.db.password.delete({ where: { id: id, authorId: userId } })
-        .then(() => resolve(null))
-        .catch(error => reject(error))
+        .then(() => resolve(HttpStatus.ACCEPTED))
+        .catch(error => reject({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: error.message, error: error}))
     })
   }
 }

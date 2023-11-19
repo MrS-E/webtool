@@ -5,7 +5,7 @@ import {
   Put,
   Delete,
   Body,
-  Req, Param
+  Req, Param, HttpException, HttpStatus
 } from "@nestjs/common";
 import CreatePasswordsDTO from './dto/CreatePasswordsDTO';
 import { PasswordsService } from './passwords.service';
@@ -17,42 +17,44 @@ import UpdatePasswordsDTO from "./dto/UpdatePasswordsDTO";
 export class PasswordsController {
   constructor(private readonly passwortService: PasswordsService) {}
 
+  async trycatch(func: Function) :Promise<any> {
+    try {
+      return await func()
+    } catch (e) {
+      throw new HttpException({
+        status: e.status,
+      }, e.status, {
+        cause: e.error
+      });
+    }
+  }
+
+  getToken(req: Request):string{
+    return <string>req.headers["authentication-token"]
+  }
+
   @Get()
-  async getAll(@Req() req: Request): Promise<Password[]|number> {
-    const token: string = <string>req.headers["authentication-token"]
-    return await this.passwortService.getAll(token)
-      .catch(()=>500);
+  async getAll(@Req() req: Request): Promise<Password[]> {
+    return await this.trycatch(async () => await this.passwortService.getAll(this.getToken(req)))
   }
 
   @Get(':id')
-  async get(@Param('id') id: string, @Req() req: Request):Promise<Password|number> {
-    const token: string = <string>req.headers["authentication-token"]
-    return await this.passwortService.get(token, id)
-      .catch(()=>500)
+  async get(@Param('id') id: string, @Req() req: Request):Promise<Password> {
+    return await this.trycatch(async () => await this.passwortService.get(this.getToken(req), id))
   }
 
   @Post()
-  async create(@Body() createPasswordsDTO: CreatePasswordsDTO, @Req() req: Request): Promise<number> {
-    const token: string = <string>req.headers["authentication-token"]
-    return await this.passwortService.create(token, createPasswordsDTO)
-      .then(()=>201)
-      .catch(()=>500)
+  async create(@Body() createPasswordsDTO: CreatePasswordsDTO, @Req() req: Request): Promise<HttpStatus> {
+    return await this.trycatch(async () => await this.passwortService.create(this.getToken(req), createPasswordsDTO))
   }
 
   @Put()
-  async update(@Body() updatePasswordDTO: UpdatePasswordsDTO, @Req() req: Request):Promise<number> {
-    const token: string = <string>req.headers["authentication-token"]
-    return await this.passwortService.update(token, updatePasswordDTO)
-      .then(()=>200)
-      .catch(()=>500)
+  async update(@Body() updatePasswordDTO: UpdatePasswordsDTO, @Req() req: Request):Promise<HttpStatus> {
+    return await this.trycatch(async () => await this.passwortService.update(this.getToken(req), updatePasswordDTO))
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string, @Req() req: Request):Promise<number> {
-    const token: string = <string>req.headers["authentication-token"]
-    return await this.passwortService.delete(token, id)
-      .then(()=>202)
-      .catch(()=>500)
-
-  }
+  async delete(@Param('id') id: string, @Req() req: Request):Promise<HttpStatus> {
+    return await this.trycatch(async () => await this.passwortService.delete(this.getToken(req), id))
+    }
 }

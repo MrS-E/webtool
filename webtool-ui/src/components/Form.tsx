@@ -1,9 +1,9 @@
 
 function Form(props:any):JSX.Element {
 
-    function mySubmitFunction(e: { preventDefault: () => void; }) {
+    async function mySubmitFunction(e: { preventDefault: () => void; }) {
         e.preventDefault();
-        props.action()
+        await props.action()
         return false;
     }
 

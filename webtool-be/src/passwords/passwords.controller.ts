@@ -5,12 +5,14 @@ import {
   Put,
   Delete,
   Body,
-  Req, Param, HttpException, HttpStatus
+  Param,
+  HttpException,
+  HttpStatus,
+  Headers
 } from "@nestjs/common";
 import CreatePasswordsDTO from './dto/CreatePasswordsDTO';
 import { PasswordsService } from './passwords.service';
 import { Password } from '@prisma/client';
-import { Request } from "express";
 import UpdatePasswordsDTO from "./dto/UpdatePasswordsDTO";
 
 @Controller('passwords')
@@ -29,32 +31,42 @@ export class PasswordsController {
     }
   }
 
-  getToken(req: Request):string{
-    return <string>req.headers["authentication-token"]
-  }
-
   @Get()
-  async getAll(@Req() req: Request): Promise<Password[]> {
-    return await this.trycatch(async () => await this.passwortService.getAll(this.getToken(req)))
+  async getAll(
+      @Headers('authentication-token') token: string,
+  ): Promise<Password[]> {
+    return await this.trycatch(async () => await this.passwortService.getAll(token))
   }
 
   @Get(':id')
-  async get(@Param('id') id: string, @Req() req: Request):Promise<Password> {
-    return await this.trycatch(async () => await this.passwortService.get(this.getToken(req), id))
+  async get(
+      @Param('id') id: string,
+      @Headers('authentication-token') token: string,
+  ):Promise<Password> {
+    return await this.trycatch(async () => await this.passwortService.get(token, id))
   }
 
   @Post()
-  async create(@Body() createPasswordsDTO: CreatePasswordsDTO, @Req() req: Request): Promise<HttpStatus> {
-    return await this.trycatch(async () => await this.passwortService.create(this.getToken(req), createPasswordsDTO))
+  async create(
+      @Body() createPasswordsDTO: CreatePasswordsDTO,
+      @Headers('authentication-token') token: string,
+  ): Promise<HttpStatus> {
+    return await this.trycatch(async () => await this.passwortService.create(token, createPasswordsDTO))
   }
 
   @Put()
-  async update(@Body() updatePasswordDTO: UpdatePasswordsDTO, @Req() req: Request):Promise<HttpStatus> {
-    return await this.trycatch(async () => await this.passwortService.update(this.getToken(req), updatePasswordDTO))
+  async update(
+      @Body() updatePasswordDTO: UpdatePasswordsDTO,
+      @Headers('authentication-token') token: string,
+  ):Promise<HttpStatus> {
+    return await this.trycatch(async () => await this.passwortService.update(token, updatePasswordDTO))
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string, @Req() req: Request):Promise<HttpStatus> {
-    return await this.trycatch(async () => await this.passwortService.delete(this.getToken(req), id))
+  async delete(
+      @Param('id') id: string,
+      @Headers('authentication-token') token: string,
+  ):Promise<HttpStatus> {
+    return await this.trycatch(async () => await this.passwortService.delete(token, id))
     }
 }

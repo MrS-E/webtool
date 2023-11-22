@@ -10,24 +10,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+type DashboardObject {
+  name String
+  show Boolean
+}
+
 model User {
-  id        String     @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id        String            @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
   firstname String
   lastname  String
-  email     String     @unique
+  email     String            @unique
   auth      String
   passwords Password[]
   notes     Note[]
   token     Token[]
+  dashboard DashboardObject[]
 }
 
 model Token {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  author   User   @relation(fields: [authorId], references: [id])
-  authorId String @db.ObjectId
-  createdAt DateTime   @default(now())
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String   @db.ObjectId
+  createdAt DateTime @default(now())
 }
 
 model Password {

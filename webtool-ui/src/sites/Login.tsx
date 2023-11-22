@@ -17,7 +17,7 @@ function Login () :JSX.Element  {
         new fetch("http://localhost:3000/auth", {
             method: fetch.Method.POST,
             headers: ({"Content-Type": "application/json"} as HeadersInit),
-            mode: fetch.Mode.NO_CORS,
+            mode: fetch.Mode.CORS,
             body: JSON.stringify({email:email, password:password})
         })
             .text()
@@ -33,13 +33,11 @@ function Login () :JSX.Element  {
     }
 
     return (
-        <>
-            <Form button={"Anmelden"} action={handleSubmit} active={active}>
-                <Input type={"email"} name={"email"} label={"E-Mail"} value={setEmail}/>
-                <Input type={"password"} name={"password"} label={"Passwort"} value={setPassword}/>
-                <p>Noch kein Konto? <Link to={"/registrieren"}>Jetzt Registrieren</Link></p>
-            </Form>
-        </>
+        <Form button={"Anmelden"} action={handleSubmit} active={active}>
+            <Input type={"email"} name={"email"} label={"E-Mail"} value={setEmail}/>
+            <Input type={"password"} name={"password"} label={"Passwort"} value={setPassword}/>
+            <p>Noch kein Konto? <Link to={"/registrieren"}>Jetzt Registrieren</Link></p>
+        </Form>
     );
 }
 

@@ -1,7 +1,17 @@
 
 function Main(): JSX.Element {
     return (
-        <div></div>
+        <>
+            <section>
+                <div>
+
+                </div>
+                <button>Add Tool</button>
+            </section>
+            <section>
+
+            </section>
+        </>
     );
 }
 

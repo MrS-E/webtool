@@ -2,7 +2,7 @@ import Form from "../components/Form.tsx";
 import FormInput from "../components/FormInput.tsx";
 import {useState} from "react";
 import fetch from "../classes/fetch.ts";
-import {useNavigate, Link} from "react-router-dom";
+import {useNavigate, Link, NavigateFunction} from "react-router-dom";
 
 function Register(): JSX.Element {
     const [firstname, setFirstname] = useState()
@@ -10,6 +10,7 @@ function Register(): JSX.Element {
     const [email, setEmail] = useState()
     const [auth, setAuth] = useState()
     const [active, setActive] = useState(true)
+    const navigate: NavigateFunction = useNavigate()
 
     const handleSubmit = async () => {
         setActive(false)
@@ -21,7 +22,7 @@ function Register(): JSX.Element {
         })
         .exec()
         .then(() => {
-            useNavigate()("/login")
+            navigate("/login")
         })
         .finally(() => setActive(true))
         .catch(e => console.error(e))

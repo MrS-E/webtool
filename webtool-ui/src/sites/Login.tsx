@@ -3,7 +3,7 @@ import Input from "../components/FormInput.tsx";
 import {useState} from "react";
 import fetch from "../classes/fetch.ts";
 import {useCookies} from "react-cookie";
-import {Link, useNavigate} from "react-router-dom";
+import {Link, NavigateFunction, useNavigate} from "react-router-dom";
 
 
 function Login () :JSX.Element  {
@@ -11,6 +11,7 @@ function Login () :JSX.Element  {
     const [password, setPassword] = useState<string>("")
     const [, setCookie] = useCookies(["token"]);
     const [active, setActive] = useState(true)
+    const navigate: NavigateFunction = useNavigate()
 
     const handleSubmit=async () => {
         setActive(false)
@@ -23,7 +24,7 @@ function Login () :JSX.Element  {
             .text()
             .then(res => {
                 setCookie("token", res, {path: "/"})
-                useNavigate()("/")
+                navigate("/")
                 console.log(res)
             })
             .catch(e => console.error(e))

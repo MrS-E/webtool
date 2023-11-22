@@ -1,4 +1,4 @@
-import {Body, Controller, Get, HttpException, HttpStatus, Param, Post} from "@nestjs/common";
+import {Body, Controller, Get, HttpException, Param, Post} from "@nestjs/common";
 import CreateTokenDTO from './dto/CreateTokenDTO';
 import { AuthService } from './auth.service';
 
@@ -16,6 +16,7 @@ export class AuthController {
     }catch (e) {
       throw new HttpException({
         status: e.status,
+        cause: e.cause
       }, e.status, {
         cause: e.error
       });

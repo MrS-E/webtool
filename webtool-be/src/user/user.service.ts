@@ -9,10 +9,14 @@ const db: PrismaClient = new PrismaClient();
 export class UserService {
   createUser(createUser: CreateUserDTO) : Promise<number>{
     return new Promise(async (resolve, reject) => {
-        createUser.auth = await bcrypt.hash(createUser.auth, 10)
-        db.user.create({data: createUser})
+        bcrypt.hash(createUser.auth, 10)
+            .then((hash: string) => {createUser.auth = hash})
+            .then(() => db.user.create({data: createUser}))
             .then(() => resolve(HttpStatus.CREATED))
-            .catch((error) => reject({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: error.message, error: error}))
+            .catch((error) =>{
+                console.error(error)
+                reject({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: error.message, error: error})
+            })
     })
   }
 }

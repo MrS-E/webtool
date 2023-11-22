@@ -14,28 +14,17 @@ import CreatePasswordsDTO from './dto/CreatePasswordsDTO';
 import { PasswordsService } from './passwords.service';
 import { Password } from '@prisma/client';
 import UpdatePasswordsDTO from "./dto/UpdatePasswordsDTO";
+import {trycatch} from "../general/util";
 
 @Controller('passwords')
 export class PasswordsController {
   constructor(private readonly passwortService: PasswordsService) {}
 
-  async trycatch(func: Function) :Promise<any> {
-    try {
-      return await func()
-    } catch (e) {
-      throw new HttpException({
-        status: e.status,
-      }, e.status, {
-        cause: e.error
-      });
-    }
-  }
-
   @Get()
   async getAll(
       @Headers('authentication-token') token: string,
   ): Promise<Password[]> {
-    return await this.trycatch(async () => await this.passwortService.getAll(token))
+    return await trycatch(async () => await this.passwortService.getAll(token))
   }
 
   @Get(':id')
@@ -43,7 +32,7 @@ export class PasswordsController {
       @Param('id') id: string,
       @Headers('authentication-token') token: string,
   ):Promise<Password> {
-    return await this.trycatch(async () => await this.passwortService.get(token, id))
+    return await trycatch(async () => await this.passwortService.get(token, id))
   }
 
   @Post()
@@ -51,7 +40,7 @@ export class PasswordsController {
       @Body() createPasswordsDTO: CreatePasswordsDTO,
       @Headers('authentication-token') token: string,
   ): Promise<HttpStatus> {
-    return await this.trycatch(async () => await this.passwortService.create(token, createPasswordsDTO))
+    return await trycatch(async () => await this.passwortService.create(token, createPasswordsDTO))
   }
 
   @Put()
@@ -59,7 +48,7 @@ export class PasswordsController {
       @Body() updatePasswordDTO: UpdatePasswordsDTO,
       @Headers('authentication-token') token: string,
   ):Promise<HttpStatus> {
-    return await this.trycatch(async () => await this.passwortService.update(token, updatePasswordDTO))
+    return await trycatch(async () => await this.passwortService.update(token, updatePasswordDTO))
   }
 
   @Delete(':id')
@@ -67,6 +56,6 @@ export class PasswordsController {
       @Param('id') id: string,
       @Headers('authentication-token') token: string,
   ):Promise<HttpStatus> {
-    return await this.trycatch(async () => await this.passwortService.delete(token, id))
+    return await trycatch(async () => await this.passwortService.delete(token, id))
     }
 }

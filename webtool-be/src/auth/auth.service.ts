@@ -25,7 +25,7 @@ export class AuthService {
         }
       }
       catch (error){
-        if(error instanceof SearchError) reject({status: HttpStatus.NOT_FOUND, cause: error.message, error: error})
+        if(error instanceof SearchError) reject({status: HttpStatus.UNAUTHORIZED, cause: error.message, error: error})
         if(error instanceof UnauthorizedError) reject({status: HttpStatus.UNAUTHORIZED, cause: error.message, error: error})
         reject({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: error.message, error: error})
       }

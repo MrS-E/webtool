@@ -13,16 +13,21 @@ export class AuthService {
       try{
         const user: User = await db.user.findUnique({
           where: { email: createToken.email },
-        }).catch((()=>{throw new SearchError("User not found")}));
+        }).catch((e)=>{
+          console.error(e)
+          throw new SearchError("not found")
+        });
 
-        if (await bcrypt.compare(user.auth, await bcrypt.hash(createToken.password, 10))) {
-          const token: Token = await db.token.create({
-            data: { authorId: user.id },
-          });
-          resolve(token.id.toString());
-        }else{
-          throw new UnauthorizedError("Passwords do not match")
-        }
+         bcrypt.compare(createToken.password, user.auth).then(async (result: boolean) => {
+          if (result === true) {
+            const token: Token = await db.token.create({
+              data: {authorId: user.id},
+            })
+            resolve(token.id.toString());
+          } else {
+            throw new UnauthorizedError("Passwords do not match")
+          }
+        })
       }
       catch (error){
         if(error instanceof SearchError) reject({status: HttpStatus.UNAUTHORIZED, cause: error.message, error: error})

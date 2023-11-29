@@ -1,4 +1,4 @@
-import {Body, Controller, Get, HttpException, Param, Post} from "@nestjs/common";
+import {Body, Controller, HttpException, Post} from "@nestjs/common";
 import CreateTokenDTO from './dto/CreateTokenDTO';
 import { AuthService } from './auth.service';
 
@@ -17,21 +17,6 @@ export class AuthController {
       throw new HttpException({
         status: e.status,
         cause: e.cause
-      }, e.status, {
-        cause: e.error
-      });
-    }
-  }
-
-  @Get(':id')
-  async checkToken(
-    @Param('id') id:string
-  ): Promise<boolean>{
-    try {
-      return await this.authService.checkToken(id)
-    }catch (e) {
-      throw new HttpException({
-        status: e.status,
       }, e.status, {
         cause: e.error
       });

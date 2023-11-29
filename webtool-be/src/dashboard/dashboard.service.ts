@@ -1,18 +1,16 @@
 import {HttpStatus, Injectable} from '@nestjs/common';
-import {PrismaClient, Token} from "@prisma/client";
-import {getUserID} from "../general/util";
+import {PrismaClient} from "@prisma/client";
 
 @Injectable()
 export class DashboardService {
     private readonly db: PrismaClient = new PrismaClient();
 
-    getDashboard(token:string) {
+    getDashboard(userId:string) {
         return new Promise((resolve, reject) => {
-            getUserID(token)
-                .then((userId: string) => this.db.user.findUnique({where: {id: userId}}))
+                this.db.user.findFirst({where: {id: userId}})
                 .then((user)=>user.dashboard)
                 .then((dashboard)=>resolve(dashboard))
-                .catch((error)=>reject({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: error.message, error: error}))
+                .catch((error)=>{console.log(error);reject({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: error.message, error: error})})
         })
     }
 }

@@ -1,6 +1,7 @@
 import {HttpStatus, Injectable} from '@nestjs/common';
-import { PrismaClient, Token, User } from '@prisma/client';
+import { PrismaClient, User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 
 import CreateTokenDTO from "./dto/CreateTokenDTO";
 
@@ -8,6 +9,10 @@ const db: PrismaClient = new PrismaClient();
 
 @Injectable()
 export class AuthService {
+  constructor(
+      private jwtService: JwtService
+  ) {}
+
   createToken(createToken: CreateTokenDTO): Promise<string> {
     return new Promise(async (resolve, reject) => {
       try{
@@ -20,10 +25,8 @@ export class AuthService {
 
          bcrypt.compare(createToken.password, user.auth).then(async (result: boolean) => {
           if (result === true) {
-            const token: Token = await db.token.create({
-              data: {authorId: user.id},
-            })
-            resolve(token.id.toString());
+            const token :string = this.jwtService.sign({ id: user.id }, { expiresIn: "12h" });
+            resolve(token);
           } else {
             throw new UnauthorizedError("Passwords do not match")
           }
@@ -34,25 +37,6 @@ export class AuthService {
         if(error instanceof UnauthorizedError) reject({status: HttpStatus.UNAUTHORIZED, cause: error.message, error: error})
         reject({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: error.message, error: error})
       }
-    })
-  }
-
-  checkToken(id: string): Promise<boolean> {
-    return new Promise((resolve, reject)=>{
-      db.token.findUnique({ where: {
-          id: id,
-        }})
-          .then((token: Token)=>{
-        let diff: number = ((new Date().getTime() - new Date(token.createdAt).getTime()) / 1000)/(60*60);
-        //diff /= 60 * 60;
-        //console.log(diff)
-        if (diff < 5) {
-          resolve(true);
-        } else {
-          resolve(false);
-        }
-      })
-          .catch((error)=>reject({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: error.message, error: error}))
     })
   }
 }

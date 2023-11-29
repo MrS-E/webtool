@@ -11,27 +11,24 @@ export class PasswordsService {
     return await Promise.allSettled([new Promise((resolve, reject) => this.db.token.findUnique({ where: { id: token } }).then((tokenObj: Token) => resolve(tokenObj.authorId)).catch((error: any) => reject(error)))])[0];
   }
 
-  getAll(token:string): Promise<Password[]> {
+  getAll(userId:string): Promise<Password[]> {
     return new Promise(async (resolve, reject) => {
-      const userId:string = await this.getUserID(token)
       this.db.password.findMany({where:{authorId: userId}})
         .then((passwords : Password[])=>resolve(passwords))
         .catch((error)=>reject({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: error.message, error: error}))
     })
   }
 
-  get(token:string, id:string):Promise<Password>{
+  get(userId:string, id:string):Promise<Password>{
     return new Promise(async (resolve, reject) => {
-      const userId: string = await this.getUserID(token)
       this.db.password.findUnique({where:{authorId: userId, id: id}})
         .then((password : Password)=>resolve(password))
         .catch((error:any)=>reject({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: error.message, error: error}))
     })
   }
 
-  create(token:string, passwordDTO: CreatePasswordsDTO):Promise<HttpStatus>{
+  create(userId:string, passwordDTO: CreatePasswordsDTO):Promise<HttpStatus>{
     return new Promise(async (resolve, reject) => {
-      const userId: string = await this.getUserID(token)
       this.db.password.create({data:{
           name: passwordDTO.name,
           email: passwordDTO.email,
@@ -46,18 +43,16 @@ export class PasswordsService {
     })
   }
 
-  update(token:string, passwordDTO: UpdatePasswordsDTO):Promise<HttpStatus>{
+  update(userId:string, passwordDTO: UpdatePasswordsDTO):Promise<HttpStatus>{
     return new Promise(async (resolve, reject) => {
-      const userId: string = await this.getUserID(token)
       this.db.password.update({ where: { id: passwordDTO.id, authorId: userId }, data: passwordDTO })
         .then(() => resolve(HttpStatus.ACCEPTED))
         .catch(error => reject({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: error.message, error: error}))
     })
   }
 
-  delete(token:string, id:string): Promise<HttpStatus>{
+  delete(userId:string, id:string): Promise<HttpStatus>{
     return new Promise(async (resolve, reject) => {
-      const userId: string = await this.getUserID(token)
       this.db.password.delete({ where: { id: id, authorId: userId } })
         .then(() => resolve(HttpStatus.ACCEPTED))
         .catch(error => reject({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: error.message, error: error}))

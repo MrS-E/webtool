@@ -8,54 +8,61 @@ import {
   Param,
   HttpException,
   HttpStatus,
-  Headers
+  Headers, UseGuards,
+    Request
 } from "@nestjs/common";
 import CreatePasswordsDTO from './dto/CreatePasswordsDTO';
 import { PasswordsService } from './passwords.service';
 import { Password } from '@prisma/client';
 import UpdatePasswordsDTO from "./dto/UpdatePasswordsDTO";
 import {trycatch} from "../general/util";
+import {AuthGuard} from "../auth/auth.guard";
 
 @Controller('passwords')
 export class PasswordsController {
   constructor(private readonly passwortService: PasswordsService) {}
 
+  @UseGuards(AuthGuard)
   @Get()
   async getAll(
-      @Headers('authentication-token') token: string,
+      @Request() req : Request,
   ): Promise<Password[]> {
-    return await trycatch(async () => await this.passwortService.getAll(token))
+    return await trycatch(async () => await this.passwortService.getAll(req["user"].id))
   }
 
+  @UseGuards(AuthGuard)
   @Get(':id')
   async get(
       @Param('id') id: string,
-      @Headers('authentication-token') token: string,
+      @Request() req : Request,
   ):Promise<Password> {
-    return await trycatch(async () => await this.passwortService.get(token, id))
+    return await trycatch(async () => await this.passwortService.get(req["user"].id, id))
   }
 
+  @UseGuards(AuthGuard)
   @Post()
   async create(
       @Body() createPasswordsDTO: CreatePasswordsDTO,
-      @Headers('authentication-token') token: string,
+      @Request() req : Request,
   ): Promise<HttpStatus> {
-    return await trycatch(async () => await this.passwortService.create(token, createPasswordsDTO))
+    return await trycatch(async () => await this.passwortService.create(req["user"].id, createPasswordsDTO))
   }
 
+  @UseGuards(AuthGuard)
   @Put()
   async update(
       @Body() updatePasswordDTO: UpdatePasswordsDTO,
-      @Headers('authentication-token') token: string,
+      @Request() req : Request,
   ):Promise<HttpStatus> {
-    return await trycatch(async () => await this.passwortService.update(token, updatePasswordDTO))
+    return await trycatch(async () => await this.passwortService.update(req["user"].id, updatePasswordDTO))
   }
 
+  @UseGuards(AuthGuard)
   @Delete(':id')
   async delete(
       @Param('id') id: string,
-      @Headers('authentication-token') token: string,
+      @Request() req : Request,
   ):Promise<HttpStatus> {
-    return await trycatch(async () => await this.passwortService.delete(token, id))
+    return await trycatch(async () => await this.passwortService.delete(req["user"].id, id))
     }
 }

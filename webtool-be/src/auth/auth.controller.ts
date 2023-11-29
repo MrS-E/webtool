@@ -22,19 +22,4 @@ export class AuthController {
       });
     }
   }
-
-  @Get(':id')
-  async checkToken(
-    @Param('id') id:string
-  ): Promise<boolean>{
-    try {
-      return await this.authService.checkToken(id)
-    }catch (e) {
-      throw new HttpException({
-        status: e.status,
-      }, e.status, {
-        cause: e.error
-      });
-    }
-  }
 }

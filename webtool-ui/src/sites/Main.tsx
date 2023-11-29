@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
-import {useSearchParams} from "react-router-dom";
+import {Link, useSearchParams} from "react-router-dom";
 import Dashboard from "../subsites/Dashboard.tsx";
+import Password from "../subsites/Password.tsx";
 
 function Main(): JSX.Element {
     const [searchParams, ] = useSearchParams();
@@ -9,6 +10,9 @@ function Main(): JSX.Element {
 
     useEffect(() => {
         switch (tool) {
+            case "password":
+                setRender(<Password/>)
+                break
             default:
                 setRender(<Dashboard/>)
                 break
@@ -19,9 +23,8 @@ function Main(): JSX.Element {
         <>
             <section>
                 <div>
-
+                    <Link to={"/?tool=password"}>Passwort-Manager</Link>
                 </div>
-                <button>Add Tool</button>
             </section>
             <section>
                 {render}

@@ -7,7 +7,6 @@ export class DashboardService {
 
     getDashboard(userId:string) {
         return new Promise((resolve, reject) => {
-            console.log(userId)
                 this.db.user.findFirst({where: {id: userId}})
                 .then((user)=>user.dashboard)
                 .then((dashboard)=>resolve(dashboard))

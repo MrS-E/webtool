@@ -1,5 +1,5 @@
 import {HttpStatus, Injectable} from '@nestjs/common';
-import { PrismaClient, Token, User } from '@prisma/client';
+import { PrismaClient, User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 

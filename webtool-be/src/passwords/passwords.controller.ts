@@ -6,10 +6,9 @@ import {
   Delete,
   Body,
   Param,
-  HttpException,
   HttpStatus,
-  Headers, UseGuards,
-    Request
+  UseGuards,
+  Request
 } from "@nestjs/common";
 import CreatePasswordsDTO from './dto/CreatePasswordsDTO';
 import { PasswordsService } from './passwords.service';

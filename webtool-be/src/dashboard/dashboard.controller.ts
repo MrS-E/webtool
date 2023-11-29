@@ -1,4 +1,4 @@
-import {Controller, Get, Headers, UseGuards, Request} from '@nestjs/common';
+import {Controller, Get, UseGuards, Request} from '@nestjs/common';
 import {DashboardService} from "./dashboard.service";
 import {DashboardObject} from "@prisma/client";
 import {trycatch} from "../general/util";

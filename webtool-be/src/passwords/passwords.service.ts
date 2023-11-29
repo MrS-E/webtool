@@ -7,10 +7,6 @@ import UpdatePasswordsDTO from "./dto/UpdatePasswordsDTO";
 export class PasswordsService {
   private readonly db: PrismaClient = new PrismaClient();
 
-  private async getUserID(token: string):Promise<string> {
-    return await Promise.allSettled([new Promise((resolve, reject) => this.db.token.findUnique({ where: { id: token } }).then((tokenObj: Token) => resolve(tokenObj.authorId)).catch((error: any) => reject(error)))])[0];
-  }
-
   getAll(userId:string): Promise<Password[]> {
     return new Promise(async (resolve, reject) => {
       this.db.password.findMany({where:{authorId: userId}})

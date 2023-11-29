@@ -1,7 +1,5 @@
 import {useEffect, useState} from "react";
-import {useNavigate, useSearchParams} from "react-router-dom";
-//import fetch from "../classes/fetch.ts";
-import {useCookies} from "react-cookie";
+import {useSearchParams} from "react-router-dom";
 import Dashboard from "../subsites/Dashboard.tsx";
 
 function Main(): JSX.Element {

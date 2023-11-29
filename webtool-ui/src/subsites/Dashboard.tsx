@@ -17,7 +17,7 @@ function Dashboard(): JSX.Element {
     useEffect(() => {
         if(dash) {
             const elements: JSX.Element[] = []
-            for (let i: { name: string, show: boolean } of dash) {
+            for (let i of dash) {
                 switch (i.name) {
                     case "password":
                         elements.push()

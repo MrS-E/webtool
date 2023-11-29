@@ -1,5 +1,5 @@
 import {HttpStatus, Injectable} from '@nestjs/common';
-import {Password, PrismaClient, Token} from "@prisma/client";
+import {Password, PrismaClient} from "@prisma/client";
 import CreatePasswordsDTO from "./dto/CreatePasswordsDTO";
 import UpdatePasswordsDTO from "./dto/UpdatePasswordsDTO";
 

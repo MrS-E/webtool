@@ -15,14 +15,17 @@ function Password() : JSX.Element {
     const [detailTrigger, setDetailTrigger] = useState<boolean>(false)
     const [addTrigger, setAddTrigger] = useState<boolean>(false)
     const [add, setAdd] = useState({name:"", username:"", email:"", tel:"", desc:"", password:""})
-    const [detail, setDetail] = useState({name:"", username:"", email:"", telephone:"", description:"", password:""})
+    const [detail, setDetail] = useState({id:"", name:"", username:"", email:"", telephone:"", description:"", password:""})
+    const [reload, setReload] = useState(0)
 
     useEffect(() => {
         fetch("http://localhost:3000/passwords", {mode: "cors", method: "GET", headers: {"authorization": cookies.token}})
             .then(res =>res.status===401?navigate("/login"):res.json())
             .then(res => setPwd(res))
             .catch()
-    }, []);
+            .finally(()=>setReload(0))
+
+    }, [reload]);
 
     const handleAdd = () => {
         const master = window.prompt("Please provide your master password", "secret")
@@ -30,7 +33,8 @@ function Password() : JSX.Element {
         fetch("http://localhost:3000/passwords", {mode: "cors", method: "POST", headers: {"authorization": cookies.token, "Content-Type": "application/json"}, body: JSON.stringify({...add, password: crypt.AES.encrypt(add.password, master).toString()})})
             .then(res =>res.status===401?navigate("/login"):res.json())
             .catch()
-            .finally(()=>window.location.reload())
+            .finally(()=>{setReload(reload+1);
+                setAddTrigger(false)})
     }
 
     const handleDetail = (e:Event) => {
@@ -82,6 +86,12 @@ function Password() : JSX.Element {
             <Popup trigger={detailTrigger} changeTrigger={setDetailTrigger}>
                 <h2>Detail</h2>
                 <hr/>
+                <button onClick={()=>{
+                    fetch("http://localhost:3000/passwords/"+detail.id, {mode: "cors", method: "DELETE", headers: {"authorization": cookies.token}})
+                        .finally(()=>{setReload(reload+1);
+                        setDetailTrigger(false)})
+                }}>Löschen</button>
+                <hr/>
                 {detail.name?<p><strong>Webseite:</strong>{detail.name}</p>:<></>}
                 {detail.email?<p><strong>E-Mail:</strong>{detail.email}</p>:<></>}
                 {detail.username?<p><strong>Nutzername:</strong>{detail.username}</p>:<></>}
@@ -93,12 +103,12 @@ function Password() : JSX.Element {
                 <h2>Hinzufügen</h2>
                 <hr/>
                 <Form button={"hinzufügen"} action={handleAdd}>
-                    <FormInput name={"name"} label={"Webseite"} type={"text"} value={(v:string)=>{setAdd({...add, name: v})}}/>
+                    <FormInput name={"name"} label={"Webseite"} type={"text"} required={true} value={(v:string)=>{setAdd({...add, name: v})}}/>
                     <FormInput name={"user"} label={"Nutzername"} type={"text"} value={(v:string)=>{setAdd({...add, username: v})}}/>
                     <FormInput name={"email"} label={"E-Mail"} type={"email"} value={(v:string)=>{setAdd({...add, email: v})}}/>
                     <FormInput name={"tel"} label={"Telefon"} type={"tel"} value={(v:string)=>{setAdd({...add, tel: v})}}/>
                     <FormInput name={"note"} label={"Notiz"} type={"text"} value={(v:string)=>{setAdd({...add, desc: v})}}/>
-                    <FormInput name={"pwd"} label={"Passwort"} type={"password"} value={(v:string)=>{setAdd({...add, password: v})}}/>
+                    <FormInput name={"pwd"} label={"Passwort"} type={"password"} required={true} value={(v:string)=>{setAdd({...add, password: v})}}/>
                 </Form>
             </Popup>
         </>

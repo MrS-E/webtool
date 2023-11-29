@@ -15,7 +15,7 @@ function Password() : JSX.Element {
     const [detailTrigger, setDetailTrigger] = useState<boolean>(false)
     const [addTrigger, setAddTrigger] = useState<boolean>(false)
     const [add, setAdd] = useState({name:"", username:"", email:"", tel:"", desc:"", password:""})
-
+    const [detail, setDetail] = useState({name:"", username:"", email:"", telephone:"", description:"", password:""})
 
     useEffect(() => {
         fetch("http://localhost:3000/passwords", {mode: "cors", method: "GET", headers: {"authorization": cookies.token}})
@@ -31,6 +31,18 @@ function Password() : JSX.Element {
             .then(res =>res.status===401?navigate("/login"):res.json())
             .catch()
             .finally(()=>window.location.reload())
+    }
+
+    const handleDetail = (e:Event) => {
+        // @ts-ignore
+        fetch("http://localhost:3000/passwords/"+e.currentTarget["id"], {mode: "cors", method: "GET", headers: {"authorization": cookies.token}})
+            .then(res =>res.status===401?navigate("/login"):res.json())
+            .then(res => {
+                const master = window.prompt("Please provide your master password", "secret")
+                setDetail({...res, password: crypt.AES.decrypt(res.password, master).toString(crypt.enc.Utf8)})
+            })
+            .catch()
+            .finally(()=>setDetailTrigger(true))
     }
 
     return (
@@ -55,7 +67,8 @@ function Password() : JSX.Element {
                     <tbody>
                     {pwd?.map((e:any, index:number) => {
                         return (
-                            <tr id={e.id} key={"pwd_"+index}>
+                            // @ts-ignore
+                            <tr id={e.id} key={"pwd_"+index} onClick={handleDetail}>
                                 <td>{e.name}</td>
                                 <td>{e.username}</td>
                                 <td>{e.email}</td>
@@ -69,6 +82,12 @@ function Password() : JSX.Element {
             <Popup trigger={detailTrigger} changeTrigger={setDetailTrigger}>
                 <h2>Detail</h2>
                 <hr/>
+                {detail.name?<p><strong>Webseite:</strong>{detail.name}</p>:<></>}
+                {detail.email?<p><strong>E-Mail:</strong>{detail.email}</p>:<></>}
+                {detail.username?<p><strong>Nutzername:</strong>{detail.username}</p>:<></>}
+                {detail.telephone?<p><strong>Telefon:</strong>{detail.telephone}</p>:<></>}
+                {detail.description?<p><strong>Notiz:</strong>{detail.description}</p>:<></>}
+                {detail.password?<p><strong>Passwort:</strong>{detail.password}</p>:<></>}
             </Popup>
             <Popup trigger={addTrigger} changeTrigger={setAddTrigger}>
                 <h2>Hinzufügen</h2>

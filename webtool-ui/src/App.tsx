@@ -17,6 +17,7 @@ function App() : JSX.Element {
             <Route index element={cookies.token?<Main/>:<Home/>}/>
             <Route path={"/login"} element={<Login/>}/>
             <Route path={"/registrieren"} element={<Register/>}/>
+            <Route path={"/logout"} element={<Logout/>}/>
           </Route>
         </Routes>
       </BrowserRouter>
@@ -25,3 +26,12 @@ function App() : JSX.Element {
 }
 
 export default App
+
+function Logout() : JSX.Element{
+  const [, , removeCookie] = useCookies(["token"]);
+  removeCookie("token")
+  return (
+    <>
+    </>
+  )
+}

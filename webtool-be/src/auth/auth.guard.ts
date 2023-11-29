@@ -14,13 +14,12 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException();
     }
     try {
-      const user = this.jwtService.verify(
+      request['user'] = this.jwtService.verify(
           token,
           {
             secret: jwtConstants.secret
           }
       )
-      request['user'] = user
     } catch {
       throw new UnauthorizedException();
     }

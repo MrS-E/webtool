@@ -25,7 +25,7 @@ export class AuthService {
 
          bcrypt.compare(createToken.password, user.auth).then(async (result: boolean) => {
           if (result === true) {
-            const token :string = this.jwtService.sign({ id: user.id });
+            const token :string = this.jwtService.sign({ id: user.id }, { expiresIn: "12h" });
             resolve(token);
           } else {
             throw new UnauthorizedError("Passwords do not match")

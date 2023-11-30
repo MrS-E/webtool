@@ -7,9 +7,6 @@ import {AuthGuard} from "../auth/auth.guard";
 @Module({
     imports: [],
   controllers: [NotesController],
-  providers: [NotesService, {
-      provide: APP_GUARD,
-      useClass: AuthGuard,
-  },],
+  providers: [NotesService],
 })
 export class NotesModule {}

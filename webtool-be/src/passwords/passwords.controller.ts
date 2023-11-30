@@ -13,7 +13,6 @@ import {
 import CreatePasswordsDTO from './dto/CreatePasswordsDTO';
 import { PasswordsService } from './passwords.service';
 import { Password } from '@prisma/client';
-import UpdatePasswordsDTO from "./dto/UpdatePasswordsDTO";
 import {trycatch} from "../general/util";
 import {AuthGuard} from "../auth/auth.guard";
 
@@ -48,12 +47,13 @@ export class PasswordsController {
   }
 
   @UseGuards(AuthGuard)
-  @Put()
+  @Put(":id")
   async update(
-      @Body() updatePasswordDTO: UpdatePasswordsDTO,
+      @Body() updatePasswordDTO: CreatePasswordsDTO,
       @Request() req : Request,
+      @Param('id') id: string,
   ):Promise<HttpStatus> {
-    return await trycatch(async () => await this.passwortService.update(req["user"].id, updatePasswordDTO))
+    return await trycatch(async () => await this.passwortService.update(req["user"].id, updatePasswordDTO, id))
   }
 
   @UseGuards(AuthGuard)

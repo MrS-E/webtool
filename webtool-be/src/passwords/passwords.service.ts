@@ -1,7 +1,6 @@
 import {HttpStatus, Injectable} from '@nestjs/common';
 import {Password, PrismaClient} from "@prisma/client";
 import CreatePasswordsDTO from "./dto/CreatePasswordsDTO";
-import UpdatePasswordsDTO from "./dto/UpdatePasswordsDTO";
 
 @Injectable()
 export class PasswordsService {
@@ -39,9 +38,16 @@ export class PasswordsService {
     })
   }
 
-  update(userId:string, passwordDTO: UpdatePasswordsDTO):Promise<HttpStatus>{
+  update(userId:string, passwordDTO: CreatePasswordsDTO, passwordId: string):Promise<HttpStatus>{
     return new Promise(async (resolve, reject) => {
-      this.db.password.update({ where: { id: passwordDTO.id, authorId: userId }, data: passwordDTO })
+      this.db.password.update({ where: { id: passwordId, authorId: userId }, data: {
+            name: passwordDTO.name,
+            email: passwordDTO.email,
+            username: passwordDTO.username,
+            telephone: passwordDTO.tel,
+            description: passwordDTO.desc,
+            password: passwordDTO.password
+          } })
         .then(() => resolve(HttpStatus.ACCEPTED))
         .catch(error => reject({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: error.message, error: error}))
     })

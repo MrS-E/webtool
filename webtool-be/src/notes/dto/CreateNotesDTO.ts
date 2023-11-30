@@ -1,4 +1,4 @@
-export default class CreateUserDTO {
+export default class CreateNotesDTO {
     readonly name: string;
     readonly description: string;
 }

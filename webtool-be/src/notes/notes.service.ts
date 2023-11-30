@@ -1,6 +1,6 @@
 import {HttpStatus, Injectable} from '@nestjs/common';
-import CreateTokenDTO from "../auth/dto/CreateTokenDTO";
 import {Note, PrismaClient} from "@prisma/client";
+import CreateNotesDTO from "./dto/CreateNotesDTO";
 
 @Injectable()
 export class NotesService {
@@ -22,11 +22,18 @@ export class NotesService {
         })
     }
 
-    async create(userId: string, note: CreateTokenDTO): Promise<string> {
-        return 'Hello World!'
+    create(userId: string, note: CreateNotesDTO): Promise<HttpStatus> {
+        return new Promise(async (resolve, reject) => {
+            this.db.note.create({data:{
+                    ...note,
+                    authorId: userId
+                }})
+                .then(()=>resolve(HttpStatus.CREATED))
+                .catch(error=>reject({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: error.message, error: error}))
+        })
     }
 
-    async update(userId: string, note: CreateTokenDTO, noteId: string): Promise<string> {
+    async update(userId: string, note: CreateNotesDTO, noteId: string): Promise<string> {
         return 'Hello World!'
     }
 

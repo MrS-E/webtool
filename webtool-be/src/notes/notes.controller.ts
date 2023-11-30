@@ -1,8 +1,7 @@
 import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Request} from '@nestjs/common';
 import {NotesService} from "./notes.service";
 import {trycatch} from "../general/util";
-import CreateTokenDTO from "../auth/dto/CreateTokenDTO";
-import createTokenDTO from "../auth/dto/CreateTokenDTO";
+import CreateNotesDTO from "./dto/CreateNotesDTO";
 
 @Controller('notes')
 export class NotesController {
@@ -23,11 +22,10 @@ export class NotesController {
         return trycatch(async () => await this.notesService.get(req["user"].id, id))
     }
 
-    @HttpCode(HttpStatus.NOT_IMPLEMENTED)
     @Post()
     async create(
         @Request() req : Request,
-        @Body() body : CreateTokenDTO
+        @Body() body : CreateNotesDTO
     ): Promise<string> {
         return trycatch(async () => await this.notesService.create(req["user"].id, body))
     }
@@ -37,7 +35,7 @@ export class NotesController {
     async update(
         @Request() req : Request,
         @Param("id") id : string,
-        @Body() body : CreateTokenDTO
+        @Body() body : CreateNotesDTO
     ): Promise<string> {
         return trycatch(async () => await this.notesService.update(req["user"].id, body, id))
     }

@@ -7,7 +7,7 @@ const db: PrismaClient = new PrismaClient();
 
 @Injectable()
 export class UserService {
-  createUser(createUser: CreateUserDTO) : Promise<number>{
+  createUser(createUser: CreateUserDTO) : Promise<HttpStatus>{
     return new Promise(async (resolve, reject) => {
         bcrypt.hash(createUser.auth, 10)
             .then((hash: string) => {createUser.auth = hash})

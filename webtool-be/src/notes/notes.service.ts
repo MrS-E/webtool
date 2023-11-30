@@ -33,8 +33,12 @@ export class NotesService {
         })
     }
 
-    async update(userId: string, note: CreateNotesDTO, noteId: string): Promise<string> {
-        return 'Hello World!'
+    update(userId: string, note: CreateNotesDTO, noteId: string): Promise<HttpStatus> {
+        return new Promise(async (resolve, reject) => {
+            this.db.note.update({ where: { id: noteId, authorId: userId }, data: note })
+                .then(() => resolve(HttpStatus.ACCEPTED))
+                .catch(error => reject({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: error.message, error: error}))
+        })
     }
 
     async delete(userId: string, noteId: string): Promise<string> {

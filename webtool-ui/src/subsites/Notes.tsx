@@ -45,6 +45,7 @@ function Password() : JSX.Element {
                                     fetch("http://localhost:3000/notes/"+e.id, {mode: "cors", method: "DELETE", headers: {"authorization": cookies.token}})
                                         .finally(()=>{setReload(reload+1)})
                                 }}>Löschen</button>
+                                <button>Bearbeiten</button>{/*todo update*/}
                                 <div>
                                     <h4>{e.name}</h4>
                                     <p>{e.description}</p>

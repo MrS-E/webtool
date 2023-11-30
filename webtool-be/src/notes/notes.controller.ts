@@ -15,12 +15,12 @@ export class NotesController {
         return trycatch(async () => await this.notesService.getAll(req["user"].id))
     }
 
-    @HttpCode(HttpStatus.NOT_IMPLEMENTED)
     @Get(':id')
     async get(
-        @Request() req : Request
+        @Request() req : Request,
+        @Param("id") id : string
     ):Promise<string> {
-        return trycatch(async () => await this.notesService.get(req["user"].id))
+        return trycatch(async () => await this.notesService.get(req["user"].id, id))
     }
 
     @HttpCode(HttpStatus.NOT_IMPLEMENTED)

@@ -19,9 +19,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prisma:generate": "npx prisma generate",
-    "prisma:seed": "ts-node --require tsconfig-paths/register prisma/seed.ts",
-    "setup": "npm install && npm run prisma:generate",
-    "setup:dev": "npm run setup && npm run prisma:seed"
+    "setup": "npm install && npm run prisma:generate"
   },
   "dependencies": {
     "@nestjs/common": "^10.2.7",
@@ -78,7 +76,6 @@
     "testEnvironment": "node"
   },
   "prisma": {
-    "seed": "ts-node --require tsconfig-paths/register prisma/seed.ts",
     "generate": "prisma generate"
   }
 }

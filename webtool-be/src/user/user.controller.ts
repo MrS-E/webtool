@@ -1,6 +1,7 @@
 import {Body, Controller, HttpException, HttpStatus, Post} from "@nestjs/common";
 import CreateUserDTO from "./dto/CreateUserDTO";
 import { UserService } from "./user.service";
+import {trycatch} from "../general/util";
 
 @Controller('user')
 export class UserController {
@@ -10,15 +11,6 @@ export class UserController {
   createUser(
     @Body() createUser: CreateUserDTO
   ): Promise<HttpStatus> {
-    try{
-      return this.userService.createUser(createUser)
-    }
-    catch (e){
-      throw new HttpException({
-        status: e.status,
-      }, e.status, {
-        cause: e.error
-      });
-    }
+    return trycatch(async ()=>await this.userService.createUser(createUser))
   }
 }

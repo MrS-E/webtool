@@ -49,13 +49,18 @@ function Password() : JSX.Element {
             .finally(()=>setDetailTrigger(true))
     }
 
+    const handleSearch = () => {
+        if(search=="") return setReload(reload+1)
+        setPwd(pwd.filter((e:any) => e.name.includes(search) || e.username.includes(search) || e.email.includes(search) || e.telephone.includes(search)))
+    }
+
     return (
         <>
             <div>
                 <h1>Passwort-Manager</h1>
                 <div>
-                    <input type={"text"} onChange={e=>setSearch(e.target.value)} value={search}/>
-                    <button>search</button>
+                    <input type={"text"} onChange={e=>setSearch(e.target.value)} value={search} onClick={(e)=>{e.currentTarget.value=""}}/>
+                    <button onClick={handleSearch}>search</button>
                 </div>
                 <button onClick={()=>setAddTrigger(true)}>add</button>
                 <hr/>
@@ -91,6 +96,7 @@ function Password() : JSX.Element {
                         .finally(()=>{setReload(reload+1);
                         setDetailTrigger(false)})
                 }}>Löschen</button>
+                <button>Bearbeiten</button>{/*todo update*/}
                 <hr/>
                 {detail.name?<p><strong>Webseite:</strong>{detail.name}</p>:<></>}
                 {detail.email?<p><strong>E-Mail:</strong>{detail.email}</p>:<></>}

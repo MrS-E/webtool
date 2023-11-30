@@ -7,12 +7,12 @@ describe('UserController', () => {
   let controller: UserController;
   let service: UserService;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     service = new UserService();
     controller = new UserController(service);
   });
 
-  describe('create', () => {
+  describe('create User', () => {
     it('Should return 201; everything in order', async () => {
       const result : HttpStatus = HttpStatus.CREATED
       jest.spyOn(service, 'createUser').mockImplementation(async () => result);

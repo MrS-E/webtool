@@ -1,15 +1,17 @@
 import {useEffect, useState} from "react";
-import {Link, useSearchParams} from "react-router-dom";
 import Dashboard from "../subsites/Dashboard.tsx";
 import Password from "../subsites/Password.tsx";
+import Notes from "../subsites/Notes.tsx";
 
 function Main(): JSX.Element {
-    const [searchParams, ] = useSearchParams();
     const [render, setRender] = useState<JSX.Element>()
-    const tool = searchParams.get("tool")
+    const [tool, setTool] = useState<string>("")
 
     useEffect(() => {
         switch (tool) {
+            case "notes":
+                setRender(<Notes/>)
+                break
             case "password":
                 setRender(<Password/>)
                 break
@@ -23,7 +25,8 @@ function Main(): JSX.Element {
         <>
             <section>
                 <div>
-                    <Link to={"/?tool=password"}>Passwort-Manager</Link>
+                    <button onClick={()=>setTool("password")}>Passwort-Manager</button>
+                    <button onClick={()=>setTool("notes")}>Notes</button>
                 </div>
             </section>
             <section>

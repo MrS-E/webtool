@@ -41,8 +41,12 @@ export class NotesService {
         })
     }
 
-    async delete(userId: string, noteId: string): Promise<string> {
-        return 'Hello World!'
+    delete(userId: string, noteId: string): Promise<HttpStatus> {
+        return new Promise(async (resolve, reject) => {
+            this.db.note.delete({ where: { id: noteId, authorId: userId } })
+                .then(() => resolve(HttpStatus.ACCEPTED))
+                .catch(error => reject({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: error.message, error: error}))
+        })
     }
 
 }

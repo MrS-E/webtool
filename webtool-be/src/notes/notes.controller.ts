@@ -39,7 +39,6 @@ export class NotesController {
         return trycatch(async () => await this.notesService.update(req["user"].id, body, id))
     }
 
-    @HttpCode(HttpStatus.NOT_IMPLEMENTED)
     @Delete(":id")
     async delete(
         @Request() req : Request,

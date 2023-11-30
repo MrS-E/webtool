@@ -8,7 +8,6 @@ import createTokenDTO from "../auth/dto/CreateTokenDTO";
 export class NotesController {
     constructor(private readonly notesService : NotesService){}
 
-    @HttpCode(HttpStatus.NOT_IMPLEMENTED)
     @Get()
     async getAll(
         @Request() req : Request

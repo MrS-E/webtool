@@ -19,9 +19,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prisma:generate": "npx prisma generate",
-    "prisma:seed": "ts-node --require tsconfig-paths/register prisma/seed.ts",
-    "setup": "npm install && npm run prisma:generate",
-    "setup:dev": "npm run setup && npm run prisma:seed"
+    "setup": "npm install && npm run prisma:generate"
   },
   "dependencies": {
     "@nestjs/common": "^10.2.7",
@@ -39,7 +37,7 @@
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
-    "@nestjs/testing": "^10.0.0",
+    "@nestjs/testing": "^10.2.10",
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.2",
     "@types/node": "^20.3.1",
@@ -50,6 +48,7 @@
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
     "jest": "^29.5.0",
+    "node-mocks-http": "^1.13.0",
     "prettier": "^3.0.0",
     "prisma": "^5.5.2",
     "source-map-support": "^0.5.21",
@@ -78,7 +77,6 @@
     "testEnvironment": "node"
   },
   "prisma": {
-    "seed": "ts-node --require tsconfig-paths/register prisma/seed.ts",
     "generate": "prisma generate"
   }
 }

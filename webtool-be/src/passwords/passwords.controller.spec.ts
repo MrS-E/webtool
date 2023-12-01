@@ -85,7 +85,7 @@ describe('PasswordsController', () => {
     });
   });
   describe('create Password', () => {
-    it('should return https status 201', async () => { //todo need to find the problem with the test
+    it('should return https status 201', async () => {
         const result : HttpStatus = HttpStatus.CREATED;
         const req : Request = mocks.createRequest() as unknown as Request;
         req["user"] = {id: 1}

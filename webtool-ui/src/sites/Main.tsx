@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import Dashboard from "../subsites/Dashboard.tsx";
 import Password from "../subsites/Password.tsx";
 import Notes from "../subsites/Notes.tsx";
+import './Main.scss';
 
 function Main(): JSX.Element {
     const [render, setRender] = useState<JSX.Element>()
@@ -26,7 +27,7 @@ function Main(): JSX.Element {
     }, [tool])
 
     return (
-        <>
+        <main>
             <section>
                 <div>
                     <button style={!hiddeBack?{}:{display: "none"}} onClick={()=>setTool("dashboard")}>Back</button>
@@ -37,7 +38,7 @@ function Main(): JSX.Element {
             <section>
                 {render}
             </section>
-        </>
+        </main>
     );
 }
 

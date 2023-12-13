@@ -42,3 +42,12 @@ $on-secondary: #fff;
 $on-background: #000;
 $primary-light: #757de8;
 $secondary-light: #ff4081;
+
+//margins
+@mixin container(){
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 95vw;
+    padding-left: 16px;
+    padding-right: 16px;
+}

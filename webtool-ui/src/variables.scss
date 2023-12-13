@@ -28,6 +28,16 @@
   color: $color;
 }
 
+@mixin font-h5($color: $on-background) {
+  @include font(1.25rem);
+  color: $color;
+}
+
+@mixin font-h6($color: $on-background) {
+  @include font(1rem);
+  color: $color;
+}
+
 @mixin font-p($color: $on-background) {
   @include font(1rem);
   color: $color;

@@ -4,6 +4,7 @@ form {
   flex-direction: column;
   button{
     @include button();
-    @include font-h4();
+    @include font(1.25rem);
+    font-weight: bold;
   }
 }

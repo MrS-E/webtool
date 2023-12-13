@@ -1,3 +1,4 @@
+import './Form.scss';
 
 function Form(props:any):JSX.Element {
 

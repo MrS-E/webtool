@@ -51,7 +51,7 @@ function Password(): JSX.Element {
             .then(async res => {
                 console.log(res)
                 console.log({...res, password:  decrypt(res.password)})
-                setDetail({...res, password: decrypt(res.password) }) //fixme somehow password is always "" even if it's correctly decrypted in line 53
+                setDetail({...res, password: decrypt(res.password) }) //fixme somehow password is always "" even if it's correctly decrypted in line 53; update somehow without any fix it works again, i don't understand how or why
                 console.log(detail)
             })
             .catch()

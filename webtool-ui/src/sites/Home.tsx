@@ -1,3 +1,4 @@
+import './Home.sass';
 
 function Home() : JSX.Element {
     return (

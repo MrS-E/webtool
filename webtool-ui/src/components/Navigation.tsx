@@ -1,5 +1,6 @@
 import {Outlet, Link} from "react-router-dom";
 import {useCookies} from "react-cookie";
+import './Navigation.scss';
 
 function Navigation() : JSX.Element  {
     const [cookies, ] = useCookies(["token"]);

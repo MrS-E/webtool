@@ -22,7 +22,6 @@ export class DashboardService {
                 .then((passwd: Password[])=>passwd)
                 .catch(error=>reject({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: error.message, error: error}));
 
-            console.log(dash)
             resolve(dash)
         })
     }

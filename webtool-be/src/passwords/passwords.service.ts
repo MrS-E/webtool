@@ -9,7 +9,7 @@ export class PasswordsService {
 
   getAll(userId:string): Promise<Password[]> {
     return new Promise(async (resolve, reject) => {
-      this.db.password.findMany({where:{authorId: userId}, select:{password: false}})
+      this.db.password.findMany({where:{authorId: userId}, select:{password: false, id: true, name: true, username: true, email: true, telephone:true}})
         .then((password: Password[])=>resolve(password))
         .catch((error)=>reject({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: error.message, error: error}))
     })

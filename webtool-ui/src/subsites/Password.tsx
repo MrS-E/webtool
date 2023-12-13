@@ -50,8 +50,8 @@ function Password(): JSX.Element {
             .then(res => res.status === 401 ? navigate("/login") : res.json())
             .then(async res => {
                 console.log(res)
-                console.log({...res, password:  decrypt(res.password)})
-                setDetail({...res, password: decrypt(res.password) }) //fixme somehow password is always "" even if it's correctly decrypted in line 53; update somehow without any fix it works again, i don't understand how or why
+                console.log({...res, password: decrypt(res.password)})
+                setDetail({...res, password: decrypt(res.password)}) //fixme somehow password is always "" even if it's correctly decrypted in line 53; update somehow without any fix it works again, i don't understand how or why
                 console.log(detail)
             })
             .catch()
@@ -64,7 +64,7 @@ function Password(): JSX.Element {
     }
     const handleUpdate = () => {
         // @ts-ignore
-        fetch("http://localhost:3000/passwords/" + detail?.id, {mode: "cors", method: "PUT", headers: {"authorization": cookies.token, "Content-Type": "application/json"}, body: JSON.stringify({...detail, password: encrypt(detail?.password) })})
+        fetch("http://localhost:3000/passwords/" + detail?.id, {mode: "cors", method: "PUT", headers: {"authorization": cookies.token, "Content-Type": "application/json"}, body: JSON.stringify({...detail, password: encrypt(detail?.password)})})
             .then(res => res.status === 401 ? navigate("/login") : res.json())
             .catch()
             .finally(() => {
@@ -74,8 +74,8 @@ function Password(): JSX.Element {
             })
     }
 
-    const encrypt = (passwd: string) : string => crypt.AES.encrypt(passwd, master, {iv: iv}).toString()
-    const decrypt = (passwd: string) : any => crypt.AES.decrypt(passwd, master, {iv: iv}).toString(crypt.enc.Utf8)
+    const encrypt = (passwd: string): string => crypt.AES.encrypt(passwd, master, {iv: iv}).toString()
+    const decrypt = (passwd: string): any => crypt.AES.decrypt(passwd, master, {iv: iv}).toString(crypt.enc.Utf8)
 
     return (
         <>
@@ -124,8 +124,7 @@ function Password(): JSX.Element {
                         })
                 }}>Löschen
                 </button>
-                <button onClick={(event) => {
-                    event.currentTarget.setAttribute("hidden", "true")
+                <button style={update ? {display: "none"} : {}} onClick={() => {
                     setUpdate(true)
                 }}
                 >Bearbeiten

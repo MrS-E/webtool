@@ -1,0 +1,44 @@
+//font-scheme
+@mixin font($size){
+  font-size: $size;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
+  line-height: 1.2;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+@mixin font-h1($color: $on-background) {
+  @include font(2.5rem);
+  color: $color;
+}
+
+@mixin font-h2($color: $on-background) {
+  @include font(2rem);
+  color: $color;
+}
+
+@mixin font-h3($color: $on-background) {
+  @include font(1.75rem);
+  color: $color;
+}
+
+@mixin font-p($color: $on-background) {
+  @include font(1rem);
+  color: $color;
+}
+
+@mixin font-small($color: $on-background) {
+  @include font(0.875rem);
+  color: $color;
+}
+
+//color-scheme
+$primary: #3f51b5;
+$secondary: #f50057;
+$background: #fff;
+$on-primary: #fff;
+$on-secondary: #fff;
+$on-background: #000;
+$primary-light: #757de8;
+$secondary-light: #ff4081;

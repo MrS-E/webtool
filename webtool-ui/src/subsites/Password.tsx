@@ -5,8 +5,7 @@ import Popup from "../components/PopUp.tsx";
 import Form from "../components/Form.tsx";
 import FormInput from "../components/FormInput.tsx";
 import crypt from "crypto-js";
-//import './Password.scss';
-import {margins, fonts, misc, colors} from "../style/variables.ts";
+import './Password.scss';
 
 function Password(): JSX.Element {
     const navigate = useNavigate()
@@ -44,6 +43,7 @@ function Password(): JSX.Element {
             })
 
     }
+
     const handleDetail = (e: Event) => {
         // @ts-ignore
         fetch("http://localhost:3000/passwords/" + e.currentTarget["id"] + "?rand" + Math.random(), {mode: "cors", method: "GET", headers: {"authorization": cookies.token}})
@@ -57,6 +57,7 @@ function Password(): JSX.Element {
             .catch()
             .finally(() => setDetailTrigger(true))
     }
+
     const handleSearch = () => {
         if (search == "") return setReload(reload + 1)
         setPwd(pwd.filter((e: any) => e.name.includes(search) || e.username.includes(search) || e.email.includes(search) || e.telephone.includes(search)))
@@ -78,26 +79,25 @@ function Password(): JSX.Element {
 
     return (
         <>
-            <div style={margins.container}>
-                <h1 style={fonts.h1}>Passwort-Manager</h1>
-                <div style={fonts.p}>
-                    <label style={styles.marginRight}>Search</label>
+            <div>
+                <h1>Passwort-Manager</h1>
+                <div>
+                    <label>Search</label>
                     <input type={"text"} onChange={e => setSearch(e.target.value)} value={search} onClick={(e) => {
                         e.currentTarget.value = ""
-                    }} style={{...fonts.p, padding: "5px", ...styles.marginRight}}/>
-                    <button style={styles.button} onClick={handleSearch}>search</button>
-                    <button style={styles.button} onClick={() => setAddTrigger(true)}>add</button>
+                    }}/>
+                    <button onClick={handleSearch}>search</button>
+                    <button onClick={() => setAddTrigger(true)}>add</button>
                 </div>
                 <hr/>
-                {/*@ts-ignore*/}
-                <table style={styles.table.main}>
-                    <thead style={styles.table.thead.main}>
-                        <tr>
-                            <th style={styles.table.thead.tr.th}>Webseite</th>
-                            <th style={styles.table.thead.tr.th}>Nutzername</th>
-                            <th style={styles.table.thead.tr.th}>Email</th>
-                            <th style={styles.table.thead.tr.th}>Telefon</th>
-                        </tr>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Webseite</th>
+                        <th>Nutzername</th>
+                        <th>Email</th>
+                        <th>Telefon</th>
+                    </tr>
                     </thead>
                     <tbody>
                     {pwd?.map((e: any, index: number) => {
@@ -198,50 +198,3 @@ function Password(): JSX.Element {
 }
 
 export default Password;
-
-const styles = {
-    marginRight: {
-        marginRight: "10px"
-    },
-    button: {
-        ...()=>misc.button(),
-        marginRight:"10px",
-        ...fonts.p
-    },
-    table: {
-        main: {
-            paddingLeft: "10px",
-            borderCollapse: "collapse",
-        },
-        thead:{
-            main: {
-                ...fonts.h5,
-            },
-            tr:{
-                th:{
-                    paddingRight: "10vw",
-                }
-            }
-        },
-        tbody:{
-            main: {
-                ...fonts.p,
-            },
-            tr:{
-                main:{
-                    transition: "border 0.05s",
-                    borderRadius: "50%",
-                    padding: "5px",
-                    height: "35px",
-                    hover: {
-                        border: "2px solid" + colors.primaryLight,
-                    }
-                },
-                td:{
-                    paddingRight: "10vw",
-                    ...fonts.h5,
-                }
-            }
-        }
-    }
-}

@@ -1,57 +1,45 @@
 import {HttpStatus, Injectable} from '@nestjs/common';
-import { PrismaClient, User } from '@prisma/client';
+import {PrismaClient, User} from '@prisma/client';
 import * as bcrypt from 'bcrypt';
-import { JwtService } from '@nestjs/jwt';
+import {JwtService} from '@nestjs/jwt';
 
 import CreateTokenDTO from "./dto/CreateTokenDTO";
+import {PrismaService} from "../prisma/prisma.service";
 
-const db: PrismaClient = new PrismaClient();
 
 @Injectable()
 export class AuthService {
-  constructor(
-      private jwtService: JwtService
-  ) {}
+    constructor(
+        private jwtService: JwtService,
+        private prisma: PrismaService
+    ) {}
 
-  createToken(createToken: CreateTokenDTO): Promise<string> {
-    return new Promise(async (resolve, reject) => {
-      try{
-        const user: User = await db.user.findUnique({
-          where: { email: createToken.email },
-        }).catch((e)=>{
-          console.error(e)
-          throw new SearchError("not found")
-        });
+    createToken(createToken: CreateTokenDTO): Promise<string> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const user: User = await this.prisma.user.findUnique({where: {email: createToken.email}})
+                    .then(user => {
+                        if (user === null) reject({status: HttpStatus.UNAUTHORIZED, cause: "User not found", error: "User not found"});
+                        return user;
+                    })
+                    .catch((e) => {
+                        reject({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: "Something went wrong", error: e});
+                    }) as User;
 
-         bcrypt.compare(createToken.password, user.auth).then(async (result: boolean) => {
-          if (result === true) {
-            const token :string = this.jwtService.sign({ id: user.id }, { expiresIn: "12h" });
-            resolve(token);
-          } else {
-            throw new UnauthorizedError("Passwords do not match")
-          }
+                bcrypt.compare(createToken.password, user.auth)
+                    .then(async (result: boolean) => {
+                        if (! result) reject({status: HttpStatus.UNAUTHORIZED, cause: "Passwords do not match", error: "Passwords do not match"});
+                        return this.jwtService.sign({id: user.id}, {expiresIn: "12h"});
+                    })
+                    .then((token: string) => {
+                        resolve(token);
+                    })
+                    .catch((e) => {
+                        reject({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: "Something went wrong", error: e});
+                    })
+            } catch (e) {
+                reject({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: "Something went wrong", error: e});
+            }
         })
-      }
-      catch (error){
-        if(error instanceof SearchError) reject({status: HttpStatus.UNAUTHORIZED, cause: error.message, error: error})
-        if(error instanceof UnauthorizedError) reject({status: HttpStatus.UNAUTHORIZED, cause: error.message, error: error})
-        reject({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: error.message, error: error})
-      }
-    })
-  }
-}
-
-
-class SearchError extends Error {
-  constructor(message: string) {
-    super(message); // (1)
-    this.name = 'SearchError';
-  }
-}
-
-class UnauthorizedError extends Error {
-  constructor(message: string) {
-    super(message); // (1)
-    this.name = 'SearchError';
-  }
+    }
 }

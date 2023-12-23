@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, Param, Post, Put, Request, UseGuards} from '@nestjs/common';
+import {Body, Controller, Delete, Get, HttpException, Param, Post, Put, Request, UseGuards} from '@nestjs/common';
 import {NotesService} from "./notes.service";
 import {trycatch} from "../general/util";
 import CreateNotesDTO from "./dto/CreateNotesDTO";
@@ -13,6 +13,7 @@ export class NotesController {
     async getAll(
         @Request() req : Request
     ): Promise<string> {
+        if(!req["user"]) throw new HttpException({status: 406}, 406, {cause: "user missing"});
         return trycatch(async () => await this.notesService.getAll(req["user"].id))
     }
 
@@ -22,6 +23,7 @@ export class NotesController {
         @Request() req : Request,
         @Param("id") id : string
     ):Promise<string> {
+        if(!req["user"]) throw new HttpException({status: 406}, 406, {cause: "user missing"});
         return trycatch(async () => await this.notesService.get(req["user"].id, id))
     }
 
@@ -31,6 +33,7 @@ export class NotesController {
         @Request() req : Request,
         @Body() body : CreateNotesDTO
     ): Promise<number> {
+        if(!req["user"]) throw new HttpException({status: 406}, 406, {cause: "user missing"});
         return trycatch(async () => this.notesService.create(req["user"].id, body))
     }
 
@@ -41,6 +44,7 @@ export class NotesController {
         @Param("id") id : string,
         @Body() body : CreateNotesDTO
     ): Promise<string> {
+        if(!req["user"]) throw new HttpException({status: 406}, 406, {cause: "user missing"});
         return trycatch(async () => await this.notesService.update(req["user"].id, body, id))
     }
 
@@ -50,6 +54,7 @@ export class NotesController {
         @Request() req : Request,
         @Param("id") id : string
     ): Promise<string> {
+        if(!req["user"]) throw new HttpException({status: 406}, 406, {cause: "user missing"});
         return trycatch(async () => await this.notesService.delete(req["user"].id, id))
     }
 }

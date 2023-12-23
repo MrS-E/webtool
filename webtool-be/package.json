@@ -77,7 +77,8 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "setupFilesAfterEnv": ["<rootDir>/__test__/setup.ts"]
   },
   "prisma": {
     "seed": "ts-node --require tsconfig-paths/register prisma/seed.ts",

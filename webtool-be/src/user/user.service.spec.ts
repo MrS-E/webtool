@@ -60,10 +60,10 @@ describe('UserService', () => {
       lastname: "dash",
       auth: "123"
     }
-    prisma.user.create.mockRejectedValue(user as User)
+    prisma.user.create.mockRejectedValue({})
     jest.spyOn(bcrypt, 'hash').mockImplementation((pass, salt) => Promise.resolve(''))
     //@ts-ignore
-    expect(service.createUser(user)).resolves.toBe(HttpStatus.CREATED)
+    expect(service.createUser(user)).rejects.toStrictEqual({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: undefined, error: {}})
   })
    it('Should return 500; missing auth', ()=>{
     const user = {

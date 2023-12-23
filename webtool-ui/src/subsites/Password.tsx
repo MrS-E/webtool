@@ -4,8 +4,8 @@ import {useCookies} from "react-cookie";
 import Popup from "../components/PopUp.tsx";
 import Form from "../components/Form.tsx";
 import FormInput from "../components/FormInput.tsx";
-//@ts-ignore
 import crypt from "crypto-js";
+import './Password.scss';
 
 function Password(): JSX.Element {
     const navigate = useNavigate()
@@ -82,12 +82,13 @@ function Password(): JSX.Element {
             <div>
                 <h1>Passwort-Manager</h1>
                 <div>
+                    <label>Search</label>
                     <input type={"text"} onChange={e => setSearch(e.target.value)} value={search} onClick={(e) => {
                         e.currentTarget.value = ""
                     }}/>
                     <button onClick={handleSearch}>search</button>
+                    <button onClick={() => setAddTrigger(true)}>add</button>
                 </div>
-                <button onClick={() => setAddTrigger(true)}>add</button>
                 <hr/>
                 <table>
                     <thead>

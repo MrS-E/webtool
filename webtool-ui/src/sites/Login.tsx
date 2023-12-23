@@ -34,11 +34,14 @@ function Login () :JSX.Element  {
     }
 
     return (
-        <Form button={"Anmelden"} action={handleSubmit} active={active}>
-            <Input type={"email"} name={"email"} label={"E-Mail"} value={setEmail}/>
-            <Input type={"password"} name={"password"} label={"Passwort"} value={setPassword}/>
-            <p>Noch kein Konto? <Link to={"/registrieren"}>Jetzt Registrieren</Link></p>
-        </Form>
+        <div>
+            <h1>Anmeldung</h1>
+            <Form button={"Anmelden"} action={handleSubmit} active={active}>
+                <Input type={"email"} name={"email"} label={"E-Mail"} value={setEmail}/>
+                <Input type={"password"} name={"password"} label={"Passwort"} value={setPassword}/>
+                <p>Noch kein Konto? <Link to={"/registrieren"}>Jetzt Registrieren</Link></p>
+            </Form>
+        </div>
     );
 }
 

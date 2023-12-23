@@ -1,0 +1,12 @@
+div{
+  @include container();
+  h1{
+    @include font-h1();
+  }
+  h2{
+    @include font-h2();
+  }
+  p {
+    @include font-p();
+  }
+}

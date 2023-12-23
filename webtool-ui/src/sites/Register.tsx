@@ -29,13 +29,16 @@ function Register(): JSX.Element {
     }
 
     return (
-        <Form button={"Registrieren"} active={active} action={handleSubmit}>
-            <FormInput type={"text"} name={"fname"} value={setFirstname} label={"Vorname"}/>
-            <FormInput type={"text"} name={"lname"} value={setLastname} label={"Nachname"}/>
-            <FormInput type={"email"} name={"email"} value={setEmail} label={"E-Mail"}/>
-            <FormInput type={"password"} name={"password"} value={setAuth} label={"Passwort"}/>
-            <p>Haben Sie schon einen Account: <Link to={"/login"}>Melden Sie sich an!</Link></p>
-        </Form>
+        <div>
+            <h1>Registrierung</h1>
+            <Form button={"Registrieren"} active={active} action={handleSubmit}>
+                <FormInput type={"text"} name={"fname"} value={setFirstname} label={"Vorname"}/>
+                <FormInput type={"text"} name={"lname"} value={setLastname} label={"Nachname"}/>
+                <FormInput type={"email"} name={"email"} value={setEmail} label={"E-Mail"}/>
+                <FormInput type={"password"} name={"password"} value={setAuth} label={"Passwort"}/>
+                <p>Haben Sie schon einen Account: <Link to={"/login"}>Melden Sie sich an!</Link></p>
+            </Form>
+        </div>
     );
 }
 

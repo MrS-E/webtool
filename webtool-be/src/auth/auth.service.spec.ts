@@ -38,7 +38,7 @@ describe('AuthService', () => {
     jest.clearAllMocks();
   });
 
-  it('Create Token should return a token', async () => { //todo: fix this test
+  it('Create Token should return a token', async () => {
     const result: string = ""
     // @ts-ignore
     prisma.user.findUnique.mockResolvedValueOnce({id: 1, email: "", auth: ""} as User);

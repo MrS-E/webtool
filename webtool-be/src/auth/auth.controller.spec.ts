@@ -26,7 +26,7 @@ describe('AuthController', () => {
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
-  it('Create Token should return a token', async () => { //todo: fix this test
+  it('Create Token should return a token', async () => {
     const result: string = ""
     jest.spyOn(controller, 'createToken').mockImplementation(async () => result);
     expect(await controller.createToken({email: "", password: ""})).toBe(result);

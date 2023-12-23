@@ -1,68 +1,40 @@
+import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
+import {prismaMock} from "../general/singelton";
+import bcrypt from "bcrypt";
+import {HttpStatus} from "@nestjs/common";
+import {User} from "@prisma/client";
 
 describe('UserService', () => {
   let service: UserService;
 
+  jest.mock('bcrypt', ()=>({hash: (pwd, salt)=>{return new Promise((resolve)=>{resolve(pwd+salt)})}}))
+
   beforeEach(async () => {
-    service = new UserService();
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [UserService],
+    }).compile();
+
+    service = module.get<UserService>(UserService);
   });
 
-    describe('createUser', () => {
-      it('Should return 201; everything in order', async () => {
-        const result: number = 201 //HttpStatus.CREATED
-        jest.spyOn(service, 'createUser').mockImplementation(async () => result);
+  it('should be defined', () => {
+    expect(service).toBeDefined();
+  });
 
-        expect(await service.createUser({
-          firstname: 'test',
-          lastname: 'test',
-          email: 'test.test@test.test',
-          auth: 'test'
-        })).toBe(result);
-      });
+  it('works', ()=>{
+    const user = {
+      firstname: "meier",
+      lastname: "dash",
+      email: "m.d@as.a",
+      auth: "123"
+    }
+    // @ts-ignore
+    prismaMock.user.create.mockResolvedValue(user as User)
+    expect(prismaMock.user.create).toHaveBeenCalled()
+    expect(bcrypt.hash).toHaveBeenCalled()
+    expect(service.createUser(user)).toBe(HttpStatus.CREATED)
+  })
 
-      it('Should return 201; missing names', async () => {
-        const result: number = 201 //HttpStatus.CREATED
-        jest.spyOn(service, 'createUser').mockImplementation(async () => result);
-
-        // @ts-ignore
-        expect(await service.createUser({
-          email: 'test.test@test.test',
-          auth: 'test'
-        })).toBe(result);
-      });
-
-      it('Should return 500; missing mail', async () => {
-        const result: number = 500 //HttpStatus.INTERNAL_SERVER_ERROR
-        jest.spyOn(service, 'createUser').mockImplementation(async () => result);
-
-        // @ts-ignore
-        expect(await service.createUser({
-          firstname: 'test',
-          lastname: 'test',
-          auth: 'test'
-        })).toBe(result);
-      });
-
-      it('Should return 500; missing auth', async () => {
-        const result: number = 500 //HttpStatus.INTERNAL_SERVER_ERROR
-        jest.spyOn(service, 'createUser').mockImplementation(async () => result);
-
-        // @ts-ignore
-        expect(await service.createUser({
-          firstname: 'test',
-          lastname: 'test',
-          email: 'test.test@test.test',
-        })).toBe(result);
-      });
-
-      it('Should return 500; empty', async () => {
-        const result: number = 500 //HttpStatus.INTERNAL_SERVER_ERROR
-        jest.spyOn(service, 'createUser').mockImplementation(async () => result);
-
-        // @ts-ignore
-        expect(await service.createUser()).toBe(result);
-      });
-
-    });
 
 });

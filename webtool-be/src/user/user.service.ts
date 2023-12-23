@@ -1,9 +1,7 @@
 import {HttpStatus, Injectable} from '@nestjs/common';
 import CreateUserDTO from "./dto/CreateUserDTO";
-import { PrismaClient } from "@prisma/client";
 import * as bcrypt from 'bcrypt';
-
-const db: PrismaClient = new PrismaClient();
+import {db} from '../general/util'
 
 @Injectable()
 export class UserService {

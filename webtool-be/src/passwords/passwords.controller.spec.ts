@@ -5,6 +5,8 @@ import {Password} from "@prisma/client";
 import * as mocks from "node-mocks-http";
 import {AuthGuard} from "../auth/auth.guard";
 import {HttpException, HttpStatus} from "@nestjs/common";
+import UpdatePasswordDTO from "./dto/UpdatePasswordDTO";
+import {PrismaService} from "../prisma/prisma.service";
 
 describe('PasswordsController', () => {
   let controller: PasswordsController;
@@ -13,7 +15,7 @@ describe('PasswordsController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [PasswordsController],
-      providers: [PasswordsService],
+      providers: [PasswordsService, PrismaService],
     })
         .overrideGuard(AuthGuard).useValue({canActivate: jest.fn().mockReturnValue(true)}) //needed to mock the AuthGuard
         .compile();
@@ -135,7 +137,7 @@ describe('PasswordsController', () => {
         const req : Request = mocks.createRequest() as unknown as Request;
         req["user"] = {id: 1}
         jest.spyOn(service, 'update').mockImplementation(async () => result);
-        expect(await controller.update({name: "test", password: "test", username: "test", email:"test", tel:"test", desc:"123"}, req, "1")).toBe(result);
+        expect(await controller.update({name: "test", password: "test", username: "test", email:"test", telephone:"test", description:"123"} as UpdatePasswordDTO, req, "1")).toBe(result);
     });
     it('should return https status 500 if user misses', async () => {
         const result: HttpException = new HttpException({
@@ -145,7 +147,7 @@ describe('PasswordsController', () => {
             "response": {}
         }, HttpStatus.INTERNAL_SERVER_ERROR);
         const req : Request = mocks.createRequest() as unknown as Request;
-        expect(await controller.update( {name: "test", password: "test", username: "test", email:"test", tel:"test", desc:"123"}, req, "1").catch(e=>e)).toStrictEqual(result);
+        expect(await controller.update( {name: "test", password: "test", username: "test", email:"test", telephone:"test", description:"123"} as UpdatePasswordDTO, req, "1").catch(e=>e)).toStrictEqual(result);
     });
     it('should return https status 500 if service throws', async () => {
         const result: HttpException = new HttpException({
@@ -157,7 +159,7 @@ describe('PasswordsController', () => {
         const req : Request = mocks.createRequest() as unknown as Request;
         req["user"] = {id: 1}
         jest.spyOn(service, 'update').mockImplementation(async () => {throw result});
-        expect(await controller.update( {name: "test", password: "test", username: "test", email:"test", tel:"test", desc:"123"}, req, "1").catch(e=>e)).toStrictEqual(result);
+        expect(await controller.update( {name: "test", password: "test", username: "test", email:"test", telephone:"test", description:"123"} as UpdatePasswordDTO, req, "1").catch(e=>e)).toStrictEqual(result);
     });
     it('should return https status 500 if data is incomplete', async () => {
         const result: HttpException = new HttpException({

@@ -1,6 +1,7 @@
 import {Body, Controller, HttpException, Post} from "@nestjs/common";
 import CreateTokenDTO from './dto/CreateTokenDTO';
 import { AuthService } from './auth.service';
+import {trycatch} from "../general/util";
 
 @Controller('auth')
 export class AuthController {
@@ -11,15 +12,6 @@ export class AuthController {
   async createToken(
     @Body() createToken: CreateTokenDTO,
   ): Promise<string> {
-    try {
-      return await this.authService.createToken(createToken)
-    }catch (e) {
-      throw new HttpException({
-        status: e.status,
-        cause: e.cause
-      }, e.status, {
-        cause: e.error
-      });
-    }
+    return await trycatch(async ()=> await this.authService.createToken(createToken))
   }
 }

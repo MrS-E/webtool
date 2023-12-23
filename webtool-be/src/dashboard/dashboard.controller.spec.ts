@@ -5,6 +5,7 @@ import * as mocks from "node-mocks-http";
 import {HttpException, HttpStatus} from "@nestjs/common";
 import {DashboardService} from "./dashboard.service";
 import {AuthGuard} from "../auth/auth.guard";
+import {PrismaService} from "../prisma/prisma.service";
 
 describe('DashboardController', () => {
   let controller: DashboardController;
@@ -13,7 +14,7 @@ describe('DashboardController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [DashboardController],
-      providers: [DashboardService]
+      providers: [DashboardService, PrismaService]
     })
         .overrideGuard(AuthGuard).useValue({canActivate: jest.fn().mockReturnValue(true)})
         .compile();

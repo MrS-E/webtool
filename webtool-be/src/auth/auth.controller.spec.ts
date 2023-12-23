@@ -4,6 +4,7 @@ import {HttpStatus} from "@nestjs/common";
 import {JwtModule} from "@nestjs/jwt";
 import {jwtConstants} from "./constants";
 import {AuthService} from "./auth.service";
+import {PrismaService} from "../prisma/prisma.service";
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -11,7 +12,7 @@ describe('AuthController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
-      providers: [AuthService],
+      providers: [AuthService, PrismaService],
       imports: [JwtModule.register({
         global: true,
         secret: jwtConstants.secret,
@@ -25,7 +26,7 @@ describe('AuthController', () => {
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
-  it('Create Token should return a token', async () => { //todo: fix this test
+  it('Create Token should return a token', async () => {
     const result: string = ""
     jest.spyOn(controller, 'createToken').mockImplementation(async () => result);
     expect(await controller.createToken({email: "", password: ""})).toBe(result);

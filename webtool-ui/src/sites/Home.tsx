@@ -1,3 +1,4 @@
+import './Home.scss';
 
 function Home() : JSX.Element {
     return (

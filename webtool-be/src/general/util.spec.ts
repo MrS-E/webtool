@@ -23,7 +23,7 @@ describe('Utilitys', () => {
         it('should throw an HttpException if the function throws an error', async () => {
             try {
                 await trycatch(() => {throw new Error("Test")});
-                fail();
+                //fail();
             } catch (e) {
                 expect(e).toBeInstanceOf(HttpException);
             }

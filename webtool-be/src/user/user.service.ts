@@ -13,7 +13,7 @@ export class UserService {
             .then(() => this.prisma.user.create({data: createUser}))
             .then(() => resolve(HttpStatus.CREATED))
             .catch((error) =>{
-                console.error(error)
+                //console.error(error)
                 reject({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: error.message, error: error})
             })
     })

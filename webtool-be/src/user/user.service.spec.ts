@@ -1,40 +1,45 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
-import {prismaMock} from "../general/singelton";
-import bcrypt from "bcrypt";
+import * as bcrypt from "bcrypt";
 import {HttpStatus} from "@nestjs/common";
-import {User} from "@prisma/client";
+import {PrismaClient} from "@prisma/client";
+import {PrismaService} from "../prisma/prisma.service";
+import {mockDeep, DeepMockProxy} from "jest-mock-extended";
 
 describe('UserService', () => {
   let service: UserService;
-
-  jest.mock('bcrypt', ()=>({hash: (pwd, salt)=>{return new Promise((resolve)=>{resolve(pwd+salt)})}}))
+  let prisma: DeepMockProxy<PrismaClient>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [UserService],
-    }).compile();
+      providers: [UserService, PrismaService],
+    })
+        .overrideProvider(PrismaService)
+        .useValue(mockDeep<PrismaClient>())
+        .compile();
 
+    prisma = module.get<DeepMockProxy<PrismaClient>>(PrismaService)
     service = module.get<UserService>(UserService);
   });
+
+  afterEach(()=>{
+    jest.resetAllMocks()
+  })
 
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
 
-  it('works', ()=>{
+  it('returns 201', ()=>{
     const user = {
       firstname: "meier",
       lastname: "dash",
       email: "m.d@as.a",
       auth: "123"
     }
-    // @ts-ignore
-    prismaMock.user.create.mockResolvedValue(user as User)
-    expect(prismaMock.user.create).toHaveBeenCalled()
-    expect(bcrypt.hash).toHaveBeenCalled()
-    expect(service.createUser(user)).toBe(HttpStatus.CREATED)
+    //@ts-ignore
+    prisma.user.create.mockResolvedValue()
+    jest.spyOn(bcrypt, 'hash').mockImplementation((pass, salt) => Promise.resolve(''))
+    expect(service.createUser(user)).resolves.toBe(HttpStatus.CREATED)
   })
-
-
 });

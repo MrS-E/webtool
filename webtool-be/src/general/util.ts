@@ -1,5 +1,4 @@
 import {HttpException} from "@nestjs/common";
-import {PrismaClient} from "@prisma/client";
 
 export async function trycatch(func: Function) :Promise<any> {
     try {
@@ -13,5 +12,3 @@ export async function trycatch(func: Function) :Promise<any> {
         });
     }
 }
-
-export const db = new PrismaClient()

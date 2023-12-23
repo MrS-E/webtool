@@ -4,6 +4,7 @@ import {HttpStatus} from "@nestjs/common";
 import {JwtModule} from "@nestjs/jwt";
 import {jwtConstants} from "./constants";
 import {AuthService} from "./auth.service";
+import {PrismaService} from "../prisma/prisma.service";
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -11,7 +12,7 @@ describe('AuthController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
-      providers: [AuthService],
+      providers: [AuthService, PrismaService],
       imports: [JwtModule.register({
         global: true,
         secret: jwtConstants.secret,

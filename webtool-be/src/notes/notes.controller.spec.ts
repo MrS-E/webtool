@@ -4,6 +4,8 @@ import {Note} from "@prisma/client";
 import * as mocks from "node-mocks-http";
 import {HttpException, HttpStatus} from "@nestjs/common";
 import {NotesService} from "./notes.service";
+import {PrismaService} from "../prisma/prisma.service";
+import {AuthGuard} from "../auth/auth.guard";
 
 describe('NotesController', () => {
   let controller: NotesController;
@@ -12,8 +14,9 @@ describe('NotesController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [NotesController],
-      providers: [NotesService]
-    }).compile();
+      providers: [NotesService, PrismaService]
+    }) .overrideGuard(AuthGuard).useValue({canActivate: jest.fn().mockReturnValue(true)})
+        .compile();
 
     service = module.get<NotesService>(NotesService);
     controller = module.get<NotesController>(NotesController);

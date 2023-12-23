@@ -11,6 +11,6 @@ import { PrismaService } from './prisma/prisma.service';
 @Module({
   imports: [PasswordsModule, AuthModule, UserModule, DashboardModule, NotesModule],
   controllers: [AppController],
-  providers: [AppService, PrismaService],
+  providers: [AppService],
 })
 export class AppModule {}

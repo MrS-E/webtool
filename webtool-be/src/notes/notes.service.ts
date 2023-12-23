@@ -1,14 +1,15 @@
 import {HttpStatus, Injectable} from '@nestjs/common';
 import {Note, PrismaClient} from "@prisma/client";
 import CreateNotesDTO from "./dto/CreateNotesDTO";
+import {PrismaService} from "../prisma/prisma.service";
 
 @Injectable()
 export class NotesService {
-    private readonly db: PrismaClient = new PrismaClient();
+    constructor( private prisma: PrismaService) {}
 
     getAll(userId:string): Promise<Note[]> {
         return new Promise(async (resolve, reject) => {
-            this.db.note.findMany({where:{authorId: userId}})
+            this.prisma.note.findMany({where:{authorId: userId}})
                 .then((notes : Note[])=>resolve(notes))
                 .catch((error)=>reject({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: error.message, error: error}))
         })
@@ -16,7 +17,7 @@ export class NotesService {
 
     get(userId: string, noteId): Promise<Note> {
         return new Promise(async (resolve, reject) => {
-            this.db.note.findUnique({where:{authorId: userId, id: noteId}})
+            this.prisma.note.findUnique({where:{authorId: userId, id: noteId}})
                 .then((note : Note)=>resolve(note))
                 .catch((error:any)=>reject({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: error.message, error: error}))
         })
@@ -24,7 +25,7 @@ export class NotesService {
 
     create(userId: string, note: CreateNotesDTO): Promise<HttpStatus> {
         return new Promise(async (resolve, reject) => {
-            this.db.note.create({data:{
+            this.prisma.note.create({data:{
                     ...note,
                     authorId: userId
                 }})
@@ -35,7 +36,7 @@ export class NotesService {
 
     update(userId: string, note: CreateNotesDTO, noteId: string): Promise<HttpStatus> {
         return new Promise(async (resolve, reject) => {
-            this.db.note.update({ where: { id: noteId, authorId: userId }, data: note })
+            this.prisma.note.update({ where: { id: noteId, authorId: userId }, data: note })
                 .then(() => resolve(HttpStatus.ACCEPTED))
                 .catch(error => reject({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: error.message, error: error}))
         })
@@ -43,7 +44,7 @@ export class NotesService {
 
     delete(userId: string, noteId: string): Promise<HttpStatus> {
         return new Promise(async (resolve, reject) => {
-            this.db.note.delete({ where: { id: noteId, authorId: userId } })
+            this.prisma.note.delete({ where: { id: noteId, authorId: userId } })
                 .then(() => resolve(HttpStatus.ACCEPTED))
                 .catch(error => reject({status: HttpStatus.INTERNAL_SERVER_ERROR, cause: error.message, error: error}))
         })

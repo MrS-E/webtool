@@ -62,9 +62,8 @@ function Note(): JSX.Element {
                                                 .finally(() => {
                                                     setReload(reload + 1)
                                                 })
-                                        }}>Löschen
-                                </button>
-                                <button style={update ? {display: "none"} : {}}
+                                        }}>Löschen</button>
+                                <button style={update&&updateData.id==e.id ? {display: "none"} : {}}
                                         onClick={() => {
                                             setUpdateData({update: {name: e.name, description: e.description}, id: e.id})
                                             setUpdate(true)

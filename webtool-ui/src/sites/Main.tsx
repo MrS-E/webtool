@@ -2,7 +2,6 @@ import {useEffect, useState} from "react";
 import Dashboard from "../subsites/Dashboard.tsx";
 import Password from "../subsites/Password.tsx";
 import Notes from "../subsites/Notes.tsx";
-import './Main.scss';
 
 function Main(): JSX.Element {
     const [render, setRender] = useState<JSX.Element>()

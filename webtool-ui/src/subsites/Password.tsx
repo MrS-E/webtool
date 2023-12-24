@@ -5,7 +5,6 @@ import Popup from "../components/PopUp.tsx";
 import Form from "../components/Form.tsx";
 import FormInput from "../components/FormInput.tsx";
 import crypt from "crypto-js";
-import './Password.scss';
 
 function Password(): JSX.Element {
     const navigate = useNavigate()
@@ -85,6 +84,7 @@ function Password(): JSX.Element {
                     <label>Search</label>
                     <input type={"text"} onChange={e => setSearch(e.target.value)} value={search} onClick={(e) => {
                         e.currentTarget.value = ""
+                        setSearch("")
                     }}/>
                     <button onClick={handleSearch}>search</button>
                     <button onClick={() => setAddTrigger(true)}>add</button>

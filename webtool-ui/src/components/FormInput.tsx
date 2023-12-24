@@ -1,5 +1,4 @@
 import {useEffect, useState} from "react";
-import './FormInput.scss';
 
 function FormInput(props:any ) :JSX.Element {
     const [value, setValue] = useState<string>(props.in?props.in:"")

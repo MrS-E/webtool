@@ -1,5 +1,3 @@
-import './Form.scss';
-
 function Form(props:any):JSX.Element {
 
     async function mySubmitFunction(e: { preventDefault: () => void; }) {

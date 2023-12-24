@@ -1,7 +1,6 @@
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {useCookies} from "react-cookie";
-import './Dashboard.scss';
 
 function Dashboard(): JSX.Element {
     const [elm, setElm] = useState<{note: Object[], password: Object[]}>()

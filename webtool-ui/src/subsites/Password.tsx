@@ -20,10 +20,13 @@ function Password(): JSX.Element {
     const [update, setUpdate] = useState<boolean>(false)
     const [master, setMaster] = useState<crypt.lib.WordArray>(crypt.enc.Utf8.parse(crypt.MD5("secret").toString()))
     const iv: crypt.lib.WordArray = crypt.enc.Utf8.parse("1234567890123456")
+    // @ts-ignore
+    const [current, setCurrent] = useState<number>(0);
 
     useEffect(() => {
         setMaster(crypt.enc.Utf8.parse(crypt.MD5(window.prompt("Please provide your master password", "secret") as string).toString()))
     }, []);
+
     useEffect(() => {
         fetch("http://localhost:3000/passwords", {mode: "cors", method: "GET", headers: {"authorization": cookies.token}})
             .then(res => res.status === 401 ? navigate("/login") : res.json())
@@ -32,6 +35,41 @@ function Password(): JSX.Element {
             .finally(() => setReload(0))
 
     }, [reload]);
+
+    /*useEffect(()=>{
+        document.addEventListener('keydown', (e)=>{
+            switch(e.key){
+                case "d":
+                    if(current>=pwd.length-1) setCurrent(-1)
+                    setCurrent(current+1)
+                    break
+                case "a":
+                    if(current<=0) setCurrent(pwd.length)
+                    setCurrent(current-1)
+                    break
+                case "s":
+                    if(current>=pwd.length-1) setCurrent(-1)
+                    setCurrent(current+1)
+                    break
+                case "w":
+                    if(current<=0) setCurrent(pwd.length)
+                    setCurrent(current-1)
+                    break
+                case "q":
+                    setDetailTrigger(false)
+                    setAddTrigger(false)
+                    break
+                case "Enter": //enter
+                    console.log(current)
+                    // @ts-ignore
+                    console.log(pwd)
+                    handleDetail({currentTarget: {id: pwd[current].id}} as unknown as Event)
+                    break
+            }
+            console.log(current, " ", pwd.length)
+
+        })
+    }, [])*/
 
     const handleAdd = () => {
         fetch("http://localhost:3000/passwords?rand" + Math.random(), {mode: "cors", method: "POST", headers: {"authorization": cookies.token, "Content-Type": "application/json"}, body: JSON.stringify({...add, password: encrypt(add.password)})})

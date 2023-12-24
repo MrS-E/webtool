@@ -52,11 +52,11 @@ function Note(): JSX.Element {
                 <h1>Notes</h1>
                 <button onClick={() => setAddTrigger(true)}>add</button>
                 <hr/>
-                <div>
+                <div style={noteContainer}>
                     {node?.map((e: any, index: number) => {
                         return (
-                            <div key={"node" + index + "_" + e.id}>
-                                <button style={update ? {display: "none"} : {}}
+                            <div key={"node" + index + "_" + e.id} style={note}>
+                                <button style={update&&updateData.id==e.id ? {display: "none"} : {}}
                                         onClick={() => {
                                             fetch("http://localhost:3000/notes/" + e.id, {mode: "cors", method: "DELETE", headers: {"authorization": cookies.token}})
                                                 .finally(() => {
@@ -68,15 +68,13 @@ function Note(): JSX.Element {
                                         onClick={() => {
                                             setUpdateData({update: {name: e.name, description: e.description}, id: e.id})
                                             setUpdate(true)
-                                        }}
-                                >Bearbeiten
-                                </button>
+                                        }}>Bearbeiten</button>
                                 {/*todo update*/}
-                                <div style={update ? {display: "none"} : {}}>
+                                <div style={update&&updateData.id==e.id ? {display: "none"} : {}}>
                                     <h4>{e.name}</h4>
                                     <p>{e.description}</p>
                                 </div>
-                                <div style={!update ? {display: "none"} : {}}>
+                                <div style={update&&updateData.id==e.id ? {} : {display: "none"}}>
                                     <Form button={"Bearbeiten"} action={handleUpdate}>
                                         <FormInput in={e.name} name={"name"} label={"Webseite"} type={"text"}
                                                    required={true}
@@ -108,6 +106,23 @@ function Note(): JSX.Element {
             </Popup>
         </>
     );
+}
+
+const noteContainer : any = {
+    display: "inline-grid",
+    gridColumn: "2",
+    gridTemplateColumns: "auto auto auto",
+    columnGap: "5%",
+    rowGap: "5%"
+}
+
+const note : any = {
+    display: "grid",
+    rowGap: "5px",
+    border: "solid 1px black",
+    borderRadius: "5px",
+    padding: "2vw",
+    minWidth: "25vw",
 }
 
 export default Note;

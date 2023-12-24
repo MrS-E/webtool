@@ -7,7 +7,11 @@ function Form(props:any):JSX.Element {
     }
 
     return (
-        <form onSubmit={mySubmitFunction}>
+        <form onSubmit={mySubmitFunction} style={{
+            display: "grid",
+            rowGap: "5px",
+            maxWidth: "100%",
+        }}>
             {props.children}
             <button type={"submit"} disabled={props.active?!props.active:false}>{props.button}</button>
         </form>

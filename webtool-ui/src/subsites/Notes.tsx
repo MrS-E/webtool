@@ -48,7 +48,7 @@ function Note(): JSX.Element {
 
     return (
         <>
-            <div>
+            <div style={{maxHeight: "100%", overflow: "hidden"}}>
                 <h1>Notes</h1>
                 <button onClick={() => setAddTrigger(true)}>add</button>
                 <hr/>
@@ -73,7 +73,7 @@ function Note(): JSX.Element {
                                     <h4>{e.name}</h4>
                                     <p>{e.description}</p>
                                 </div>
-                                <div style={update&&updateData.id==e.id ? {} : {display: "none"}}>
+                                <div style={update&&updateData.id==e.id ? {width: "25vw"} : {display: "none"}}>
                                     <Form button={"Bearbeiten"} action={handleUpdate}>
                                         <FormInput in={e.name} name={"name"} label={"Webseite"} type={"text"}
                                                    required={true}
@@ -112,7 +112,11 @@ const noteContainer : any = {
     gridColumn: "2",
     gridTemplateColumns: "auto auto auto",
     columnGap: "5%",
-    rowGap: "5%"
+    rowGap: "5%",
+    width: "100%",
+    height: "75vh",
+    maxHeight: "100%",
+    overflowY: "auto"
 }
 
 const note : any = {
@@ -121,7 +125,7 @@ const note : any = {
     border: "solid 1px black",
     borderRadius: "5px",
     padding: "2vw",
-    minWidth: "25vw",
+    width: "80%",
 }
 
 export default Note;

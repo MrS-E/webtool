@@ -98,7 +98,10 @@ function Password(): JSX.Element {
 
     const handleSearch = () => {
         if (search == "") return setReload(reload + 1)
-        setPwd(pwd.filter((e: any) => e.name.includes(search) || e.username.includes(search) || e.email.includes(search) || e.telephone.includes(search)))
+        fetch("http://localhost:3000/passwords?search", {mode: "cors", method: "GET", headers: {"authorization": cookies.token}})
+            .then(res => res.status === 401 ? navigate("/login") : res.json())
+            .then(res => setPwd(res.filter((e: any) => e.name.includes(search) || e.username.includes(search) || e.email.includes(search) || e.telephone.includes(search))))
+            .catch()
     }
     const handleUpdate = () => {
         // @ts-ignore

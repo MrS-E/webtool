@@ -5,6 +5,7 @@ import Popup from "../components/PopUp.tsx";
 import Form from "../components/Form.tsx";
 import FormInput from "../components/FormInput.tsx";
 import {server} from "../variables.ts";
+import "./Notes.css"
 
 //@ts-ignore
 
@@ -49,14 +50,14 @@ function Note(): JSX.Element {
 
     return (
         <>
-            <div style={{maxHeight: "100%", overflow: "hidden"}}>
+            <div className={"container"}>
                 <h1>Notes</h1>
                 <button onClick={() => setAddTrigger(true)}>add</button>
                 <hr/>
-                <div style={noteContainer}>
+                <div className={"note-container"} >
                     {node?.map((e: any, index: number) => {
                         return (
-                            <div key={"node" + index + "_" + e.id} style={note}>
+                            <div key={"node" + index + "_" + e.id} className={"note"}>
                                 <button style={update&&updateData.id==e.id ? {display: "none"} : {}}
                                         onClick={() => {
                                             fetch(server+"/notes/" + e.id, {mode: "cors", method: "DELETE", headers: {"authorization": cookies.token}})
@@ -64,12 +65,11 @@ function Note(): JSX.Element {
                                                     setReload(reload + 1)
                                                 })
                                         }}>Löschen</button>
-                                <button style={update&&updateData.id==e.id ? {display: "none"} : {}}
+                                <button className={"edit"} style={update&&updateData.id==e.id ? {display: "none"} : {}}
                                         onClick={() => {
                                             setUpdateData({update: {name: e.name, description: e.description}, id: e.id})
                                             setUpdate(true)
                                         }}>Bearbeiten</button>
-                                {/*todo update*/}
                                 <div style={update&&updateData.id==e.id ? {display: "none"} : {}}>
                                     <h4>{e.name}</h4>
                                     <p>{e.description}</p>
@@ -106,27 +106,6 @@ function Note(): JSX.Element {
             </Popup>
         </>
     );
-}
-
-const noteContainer : any = {
-    display: "inline-grid",
-    gridColumn: "2",
-    gridTemplateColumns: "auto auto auto",
-    columnGap: "5%",
-    rowGap: "5%",
-    width: "100%",
-    height: "75vh",
-    maxHeight: "100%",
-    overflowY: "auto"
-}
-
-const note : any = {
-    display: "grid",
-    rowGap: "5px",
-    border: "solid 1px black",
-    borderRadius: "5px",
-    padding: "2vw",
-    width: "80%",
 }
 
 export default Note;

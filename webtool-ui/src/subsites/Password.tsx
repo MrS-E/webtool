@@ -5,7 +5,8 @@ import Popup from "../components/PopUp.tsx";
 import Form from "../components/Form.tsx";
 import FormInput from "../components/FormInput.tsx";
 import crypt from "crypto-js";
-import {server} from "../variables.ts";
+import {server} from "../variables.ts"
+import "./Password.css"
 
 function Password(): JSX.Element {
     const navigate = useNavigate()
@@ -75,25 +76,25 @@ function Password(): JSX.Element {
 
     return (
         <>
-            <div>
+            <div className={"container"}>
                 <h1>Passwort-Manager</h1>
-                <div style={tools}>
-                    <label style={element}>Search</label>
-                    <input style={element} type={"text"} onChange={e => setSearch(e.target.value)} value={search} onClick={(e) => {
+                <div className={"search-container"}>
+                    <label>Search</label>
+                    <input type={"text"} onChange={e => setSearch(e.target.value)} value={search} onClick={(e) => {
                         e.currentTarget.value = ""
                         setSearch("")
                     }}/>
-                    <button style={element} onClick={handleSearch}>search</button>
-                    <button style={element} onClick={() => setAddTrigger(true)}>add</button>
+                    <button onClick={handleSearch}>search</button>
+                    <button onClick={() => setAddTrigger(true)}>add</button>
                 </div>
                 <hr/>
-                <table style={table}>
+                <table>
                     <thead>
                     <tr>
-                        <th style={th}>Webseite</th>
-                        <th style={th}>Nutzername</th>
-                        <th style={th}>Email</th>
-                        <th style={th}>Telefon</th>
+                        <th>Webseite</th>
+                        <th>Nutzername</th>
+                        <th>Email</th>
+                        <th>Telefon</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -101,10 +102,10 @@ function Password(): JSX.Element {
                         return (
                             // @ts-ignore
                             <tr id={e.id} key={"pwd_" + index} onClick={handleDetail}>
-                                <td style={td}>{e.name}</td>
-                                <td style={td}>{e.username}</td>
-                                <td style={td}>{e.email}</td>
-                                <td style={td}>{e.telephone}</td>
+                                <td>{e.name}</td>
+                                <td>{e.username}</td>
+                                <td>{e.email}</td>
+                                <td>{e.telephone}</td>
                             </tr>
                         )
                     })}
@@ -195,29 +196,3 @@ function Password(): JSX.Element {
 }
 
 export default Password;
-
-const tools : any = {
-    display: "felx",
-    justifyContent: "start",
-    padding: "10px"
-}
-
-const element : any = {
-    marginRight: "1vw"
-}
-
-const table : any = {
-    width: "98%",
-    margin: "10px",
-    borderCollapse: "collapse",
-}
-const th: any = {
-    paddingTop: "12px",
-    paddingBottom: "12px",
-    textAlign: "left",
-    color: "black",
-    border: "1px solid black"
-}
-const td: any = {
-    border: "1px solid black"
-}

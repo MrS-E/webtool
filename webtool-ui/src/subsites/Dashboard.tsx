@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {useCookies} from "react-cookie";
 import {server} from "../variables.ts";
+import "./Dashboard.css"
 
 function Dashboard(): JSX.Element {
     const [elm, setElm] = useState<{note: Object[], password: Object[]}>()
@@ -37,15 +38,15 @@ function Dashboard(): JSX.Element {
     }, [dash]);
 
     return (
-        <div>
+        <div className={"container"}>
             <h1>Dashboard</h1>
             <div>
                 <h3> Newest Notes</h3>
-                <div style={note.container}>
+                <div className={"container-dash"}>
                     {elm?.note?.map((e:any, i: number) : JSX.Element => (
-                        <div style={note.note} key={i+"dash_note"}>
+                        <div className={"notes"} key={i+"dash_note"}>
                             <p>
-                                <strong style={note.strong}>{e?.name}</strong><br/>
+                                <strong>{e?.name}</strong><br/>
                                 {e?.description}
                             </p>
                         </div>
@@ -55,11 +56,11 @@ function Dashboard(): JSX.Element {
             </div>
             <div>
                 <h3> Newest Passwords</h3>
-                <div style={note.container}>
+                <div className={"container-dash"}>
                     {elm?.password?.map((e:any, i: number) : JSX.Element => (
-                        <div style={note.note} key={i+"dash_passwd"}>
+                        <div className={"password"} key={i+"dash_passwd"}>
                             <p>
-                                <strong style={note.strong}>{e?.name}</strong><br/>
+                                <strong>{e?.name}</strong><br/>
                                 {e?.email?<>{e.email}<br/></>:""}
                                 {e?.username?<>{e.username}<br/></>:""}
                                 {e?.description?<>{e.description}<br/></>:""}
@@ -75,27 +76,3 @@ function Dashboard(): JSX.Element {
 }
 
 export default Dashboard;
-
-const note : any = {
-    container : {
-        display: "inline-grid",
-        gridColumn: "2",
-        gridTemplateColumns: "auto auto auto",
-        columnGap: "5%",
-        rowGap: "5%",
-        width: "100%",
-    },
-    note : {
-        display: "inline-grid",
-        rowGap: "1px",
-        border: "solid 1px black",
-        borderRadius: "5px",
-        paddingLeft: "2vw",
-        width: "80%",
-    },
-    strong:{
-        borderBottom: "1px solid black",
-        fontSize: "big",
-        lineHeight: "2"
-    }
-}

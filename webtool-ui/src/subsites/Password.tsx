@@ -32,7 +32,6 @@ function Password(): JSX.Element {
             .finally(() => setReload(0))
 
     }, [reload]);
-
     const handleAdd = () => {
         fetch(server+"/passwords?rand" + Math.random(), {mode: "cors", method: "POST", headers: {"authorization": cookies.token, "Content-Type": "application/json"}, body: JSON.stringify({...add, password: encrypt(add.password)})})
             .then(res => res.status === 401 ? navigate("/login") : res.json())
@@ -43,7 +42,6 @@ function Password(): JSX.Element {
             })
 
     }
-
     const handleDetail = (e: Event) => {
         // @ts-ignore
         fetch(server+"/passwords/" + e.currentTarget["id"] + "?rand" + Math.random(), {mode: "cors", method: "GET", headers: {"authorization": cookies.token}})
@@ -57,7 +55,6 @@ function Password(): JSX.Element {
             .catch()
             .finally(() => setDetailTrigger(true))
     }
-
     const handleSearch = () => {
         if (search == "") return setReload(reload + 1)
         setPwd(pwd.filter((e: any) => e.name.includes(search) || e.username.includes(search) || e.email.includes(search) || e.telephone.includes(search)))
@@ -73,7 +70,6 @@ function Password(): JSX.Element {
                 setUpdate(false)
             })
     }
-
     const encrypt = (passwd: string): string => crypt.AES.encrypt(passwd, master, {iv: iv}).toString()
     const decrypt = (passwd: string): any => crypt.AES.decrypt(passwd, master, {iv: iv}).toString(crypt.enc.Utf8)
 
@@ -81,23 +77,23 @@ function Password(): JSX.Element {
         <>
             <div>
                 <h1>Passwort-Manager</h1>
-                <div>
-                    <label>Search</label>
-                    <input type={"text"} onChange={e => setSearch(e.target.value)} value={search} onClick={(e) => {
+                <div style={tools}>
+                    <label style={element}>Search</label>
+                    <input style={element} type={"text"} onChange={e => setSearch(e.target.value)} value={search} onClick={(e) => {
                         e.currentTarget.value = ""
                         setSearch("")
                     }}/>
-                    <button onClick={handleSearch}>search</button>
-                    <button onClick={() => setAddTrigger(true)}>add</button>
+                    <button style={element} onClick={handleSearch}>search</button>
+                    <button style={element} onClick={() => setAddTrigger(true)}>add</button>
                 </div>
                 <hr/>
-                <table>
+                <table style={table}>
                     <thead>
                     <tr>
-                        <th>Webseite</th>
-                        <th>Nutzername</th>
-                        <th>Email</th>
-                        <th>Telefon</th>
+                        <th style={th}>Webseite</th>
+                        <th style={th}>Nutzername</th>
+                        <th style={th}>Email</th>
+                        <th style={th}>Telefon</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -105,10 +101,10 @@ function Password(): JSX.Element {
                         return (
                             // @ts-ignore
                             <tr id={e.id} key={"pwd_" + index} onClick={handleDetail}>
-                                <td>{e.name}</td>
-                                <td>{e.username}</td>
-                                <td>{e.email}</td>
-                                <td>{e.telephone}</td>
+                                <td style={td}>{e.name}</td>
+                                <td style={td}>{e.username}</td>
+                                <td style={td}>{e.email}</td>
+                                <td style={td}>{e.telephone}</td>
                             </tr>
                         )
                     })}
@@ -199,3 +195,29 @@ function Password(): JSX.Element {
 }
 
 export default Password;
+
+const tools : any = {
+    display: "felx",
+    justifyContent: "start",
+    padding: "10px"
+}
+
+const element : any = {
+    marginRight: "1vw"
+}
+
+const table : any = {
+    width: "98%",
+    margin: "10px",
+    borderCollapse: "collapse",
+}
+const th: any = {
+    paddingTop: "12px",
+    paddingBottom: "12px",
+    textAlign: "left",
+    color: "black",
+    border: "1px solid black"
+}
+const td: any = {
+    border: "1px solid black"
+}

@@ -1,7 +1,8 @@
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {useCookies} from "react-cookie";
-import './Dashboard.scss';
+import {server} from "../variables.ts";
+import "./Dashboard.css"
 
 function Dashboard(): JSX.Element {
     const [elm, setElm] = useState<{note: Object[], password: Object[]}>()
@@ -10,7 +11,7 @@ function Dashboard(): JSX.Element {
     const [cookies, ] = useCookies(["token"])
 
     useEffect(() => {
-        fetch("http://localhost:3000/dashboard", {mode: 'cors', headers: {"authorization": cookies.token}, method: 'GET'})
+        fetch(server+"/dashboard", {mode: 'cors', headers: {"authorization": cookies.token}, method: 'GET'})
             .then(res =>res.status===401?navigate("/login"):res.json())
             .then(res => setDash(res))
     }, []);
@@ -37,33 +38,37 @@ function Dashboard(): JSX.Element {
     }, [dash]);
 
     return (
-        <div>
+        <div className={"container"}>
             <h1>Dashboard</h1>
             <div>
                 <h3> Newest Notes</h3>
-                {elm?.note?.map((e:any, i: number) : JSX.Element => (
-                    <div key={i+"dash_note"}>
-                        <p><strong>{e?.name}</strong></p>
-                        <p>
-                            {e?.description}
-                        </p>
-                    </div>
-                ))}
-                {elm?.note.length===0?<p>Keine Notizen</p>:<></>}
+                <div className={"container-dash"}>
+                    {elm?.note?.map((e:any, i: number) : JSX.Element => (
+                        <div className={"notes"} key={i+"dash_note"}>
+                            <p>
+                                <strong>{e?.name}</strong><br/>
+                                {e?.description}
+                            </p>
+                        </div>
+                    ))}
+                    {elm?.note.length===0?<p>Keine Notizen</p>:<></>}
+                </div>
             </div>
             <div>
                 <h3> Newest Passwords</h3>
-                {elm?.password?.map((e:any, i: number) : JSX.Element => (
-                    <div key={i+"dash_passwd"}>
-                        <p><strong>{e?.name}</strong></p>
-                        <p>
-                            {e?.email}<br/>
-                            {e?.username}<br/>
-                            {e?.description}
-                        </p>
+                <div className={"container-dash"}>
+                    {elm?.password?.map((e:any, i: number) : JSX.Element => (
+                        <div className={"password"} key={i+"dash_passwd"}>
+                            <p>
+                                <strong>{e?.name}</strong><br/>
+                                {e?.email?<>{e.email}<br/></>:""}
+                                {e?.username?<>{e.username}<br/></>:""}
+                                {e?.description?<>{e.description}<br/></>:""}
+                            </p>
+                        </div>
+                    ))}
+                    {elm?.password.length===0?<p>Keine Passwörter</p>:<></>}
                     </div>
-                ))}
-                {elm?.password.length===0?<p>Keine Passwörter</p>:<></>}
             </div>
 
         </div>

@@ -1,0 +1,52 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+h3 {
+    margin-top: 20px;
+    color: #007bff;
+}
+
+.container-dash {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.notes,
+.password {
+    display: grid;
+    row-gap: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    background-color: #fff;
+    margin: 20px;
+}
+
+.notes p,
+.password p {
+    margin: 0;
+}
+
+.notes strong,
+.password strong {
+    display: block;
+    border-bottom: 1px solid #333;
+    font-size: 18px;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+}
+
+@media (max-width: 768px) {
+    .note-container {
+        grid-template-columns: 1fr;
+    }
+}

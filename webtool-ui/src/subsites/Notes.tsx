@@ -4,6 +4,8 @@ import {useCookies} from "react-cookie";
 import Popup from "../components/PopUp.tsx";
 import Form from "../components/Form.tsx";
 import FormInput from "../components/FormInput.tsx";
+import {server} from "../variables.ts";
+import "./Notes.css"
 
 //@ts-ignore
 
@@ -18,7 +20,7 @@ function Note(): JSX.Element {
     const [updateData, setUpdateData] = useState({id: "", update: {name: "", description: ""}})
 
     useEffect(() => {
-        fetch("http://localhost:3000/notes", {mode: "cors", method: "GET", headers: {"authorization": cookies.token}})
+        fetch(server+"/notes", {mode: "cors", method: "GET", headers: {"authorization": cookies.token}})
             .then(res => res.status === 401 ? navigate("/login") : res.json())
             .then(res => setNote([...res]))
             .catch()
@@ -27,7 +29,7 @@ function Note(): JSX.Element {
     }, [reload]);
 
     const handleAdd = () => {
-        fetch("http://localhost:3000/notes", {mode: "cors", method: "POST", headers: {"authorization": cookies.token, "Content-Type": "application/json"}, body: JSON.stringify(add)})
+        fetch(server+"/notes", {mode: "cors", method: "POST", headers: {"authorization": cookies.token, "Content-Type": "application/json"}, body: JSON.stringify(add)})
             .then(res => res.status === 401 ? navigate("/login") : res.json())
             .catch()
             .finally(() => {
@@ -37,7 +39,7 @@ function Note(): JSX.Element {
     }
 
     const handleUpdate = () => {
-        fetch("http://localhost:3000/notes/" + updateData.id, {mode: "cors", method: "PUT", headers: {"authorization": cookies.token, "Content-Type": "application/json"}, body: JSON.stringify(updateData.update)})
+        fetch(server+"/notes/" + updateData.id, {mode: "cors", method: "PUT", headers: {"authorization": cookies.token, "Content-Type": "application/json"}, body: JSON.stringify(updateData.update)})
             .then(res => res.status === 401 ? navigate("/login") : res.json())
             .catch()
             .finally(() => {
@@ -48,35 +50,31 @@ function Note(): JSX.Element {
 
     return (
         <>
-            <div>
+            <div className={"container"}>
                 <h1>Notes</h1>
                 <button onClick={() => setAddTrigger(true)}>add</button>
                 <hr/>
-                <div>
+                <div className={"note-container"} >
                     {node?.map((e: any, index: number) => {
                         return (
-                            <div key={"node" + index + "_" + e.id}>
-                                <button style={update ? {display: "none"} : {}}
+                            <div key={"node" + index + "_" + e.id} className={"note"}>
+                                <button style={update&&updateData.id==e.id ? {display: "none"} : {}}
                                         onClick={() => {
-                                            fetch("http://localhost:3000/notes/" + e.id, {mode: "cors", method: "DELETE", headers: {"authorization": cookies.token}})
+                                            fetch(server+"/notes/" + e.id, {mode: "cors", method: "DELETE", headers: {"authorization": cookies.token}})
                                                 .finally(() => {
                                                     setReload(reload + 1)
                                                 })
-                                        }}>Löschen
-                                </button>
-                                <button style={update ? {display: "none"} : {}}
+                                        }}>Löschen</button>
+                                <button className={"edit"} style={update&&updateData.id==e.id ? {display: "none"} : {}}
                                         onClick={() => {
                                             setUpdateData({update: {name: e.name, description: e.description}, id: e.id})
                                             setUpdate(true)
-                                        }}
-                                >Bearbeiten
-                                </button>
-                                {/*todo update*/}
-                                <div style={update ? {display: "none"} : {}}>
+                                        }}>Bearbeiten</button>
+                                <div style={update&&updateData.id==e.id ? {display: "none"} : {}}>
                                     <h4>{e.name}</h4>
                                     <p>{e.description}</p>
                                 </div>
-                                <div style={!update ? {display: "none"} : {}}>
+                                <div style={update&&updateData.id==e.id ? {width: "25vw"} : {display: "none"}}> {/*fixme small screen form overflow*/}
                                     <Form button={"Bearbeiten"} action={handleUpdate}>
                                         <FormInput in={e.name} name={"name"} label={"Webseite"} type={"text"}
                                                    required={true}

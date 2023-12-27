@@ -5,7 +5,8 @@ import Popup from "../components/PopUp.tsx";
 import Form from "../components/Form.tsx";
 import FormInput from "../components/FormInput.tsx";
 import crypt from "crypto-js";
-import './Password.scss';
+import {server} from "../variables.ts"
+import "./Password.css"
 
 function Password(): JSX.Element {
     const navigate = useNavigate()
@@ -26,9 +27,8 @@ function Password(): JSX.Element {
     useEffect(() => {
         setMaster(crypt.enc.Utf8.parse(crypt.MD5(window.prompt("Please provide your master password", "secret") as string).toString()))
     }, []);
-
     useEffect(() => {
-        fetch("http://localhost:3000/passwords", {mode: "cors", method: "GET", headers: {"authorization": cookies.token}})
+        fetch(server+"/passwords", {mode: "cors", method: "GET", headers: {"authorization": cookies.token}})
             .then(res => res.status === 401 ? navigate("/login") : res.json())
             .then(res => setPwd(res))
             .catch()
@@ -72,7 +72,7 @@ function Password(): JSX.Element {
     }, [])*/
 
     const handleAdd = () => {
-        fetch("http://localhost:3000/passwords?rand" + Math.random(), {mode: "cors", method: "POST", headers: {"authorization": cookies.token, "Content-Type": "application/json"}, body: JSON.stringify({...add, password: encrypt(add.password)})})
+        fetch(server+"/passwords?rand" + Math.random(), {mode: "cors", method: "POST", headers: {"authorization": cookies.token, "Content-Type": "application/json"}, body: JSON.stringify({...add, password: encrypt(add.password)})})
             .then(res => res.status === 401 ? navigate("/login") : res.json())
             .catch()
             .finally(() => {
@@ -81,10 +81,9 @@ function Password(): JSX.Element {
             })
 
     }
-
     const handleDetail = (e: Event) => {
         // @ts-ignore
-        fetch("http://localhost:3000/passwords/" + e.currentTarget["id"] + "?rand" + Math.random(), {mode: "cors", method: "GET", headers: {"authorization": cookies.token}})
+        fetch(server+"/passwords/" + e.currentTarget["id"] + "?rand" + Math.random(), {mode: "cors", method: "GET", headers: {"authorization": cookies.token}})
             .then(res => res.status === 401 ? navigate("/login") : res.json())
             .then(async res => {
                 console.log(res)
@@ -95,17 +94,13 @@ function Password(): JSX.Element {
             .catch()
             .finally(() => setDetailTrigger(true))
     }
-
     const handleSearch = () => {
         if (search == "") return setReload(reload + 1)
-        fetch("http://localhost:3000/passwords?search", {mode: "cors", method: "GET", headers: {"authorization": cookies.token}})
-            .then(res => res.status === 401 ? navigate("/login") : res.json())
-            .then(res => setPwd(res.filter((e: any) => e.name.includes(search) || e.username.includes(search) || e.email.includes(search) || e.telephone.includes(search))))
-            .catch()
+        setPwd(pwd.filter((e: any) => e.name.includes(search) || e.username.includes(search) || e.email.includes(search) || e.telephone.includes(search)))
     }
     const handleUpdate = () => {
         // @ts-ignore
-        fetch("http://localhost:3000/passwords/" + detail?.id, {mode: "cors", method: "PUT", headers: {"authorization": cookies.token, "Content-Type": "application/json"}, body: JSON.stringify({...detail, password: encrypt(detail?.password)})})
+        fetch(server+"/passwords/" + detail?.id, {mode: "cors", method: "PUT", headers: {"authorization": cookies.token, "Content-Type": "application/json"}, body: JSON.stringify({...detail, password: encrypt(detail?.password)})})
             .then(res => res.status === 401 ? navigate("/login") : res.json())
             .catch()
             .finally(() => {
@@ -114,18 +109,18 @@ function Password(): JSX.Element {
                 setUpdate(false)
             })
     }
-
     const encrypt = (passwd: string): string => crypt.AES.encrypt(passwd, master, {iv: iv}).toString()
     const decrypt = (passwd: string): any => crypt.AES.decrypt(passwd, master, {iv: iv}).toString(crypt.enc.Utf8)
 
     return (
         <>
-            <div>
+            <div className={"container"}>
                 <h1>Passwort-Manager</h1>
-                <div>
+                <div className={"search-container"}>
                     <label>Search</label>
                     <input type={"text"} onChange={e => setSearch(e.target.value)} value={search} onClick={(e) => {
                         e.currentTarget.value = ""
+                        setSearch("")
                     }}/>
                     <button onClick={handleSearch}>search</button>
                     <button onClick={() => setAddTrigger(true)}>add</button>
@@ -159,7 +154,7 @@ function Password(): JSX.Element {
                 <h2>Detail</h2>
                 <hr/>
                 <button style={update ? {display: "none"} : {}} onClick={() => {
-                    fetch("http://localhost:3000/passwords/" + detail?.id, {mode: "cors", method: "DELETE", headers: {"authorization": cookies.token}})
+                    fetch(server+"/passwords/" + detail?.id, {mode: "cors", method: "DELETE", headers: {"authorization": cookies.token}})
                         .finally(() => {
                             setReload(reload + 1);
                             setDetailTrigger(false)

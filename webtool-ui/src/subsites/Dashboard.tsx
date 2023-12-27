@@ -41,29 +41,33 @@ function Dashboard(): JSX.Element {
             <h1>Dashboard</h1>
             <div>
                 <h3> Newest Notes</h3>
-                {elm?.note?.map((e:any, i: number) : JSX.Element => (
-                    <div key={i+"dash_note"}>
-                        <p><strong>{e?.name}</strong></p>
-                        <p>
-                            {e?.description}
-                        </p>
-                    </div>
-                ))}
-                {elm?.note.length===0?<p>Keine Notizen</p>:<></>}
+                <div style={note.container}>
+                    {elm?.note?.map((e:any, i: number) : JSX.Element => (
+                        <div style={note.note} key={i+"dash_note"}>
+                            <p>
+                                <strong style={note.strong}>{e?.name}</strong><br/>
+                                {e?.description}
+                            </p>
+                        </div>
+                    ))}
+                    {elm?.note.length===0?<p>Keine Notizen</p>:<></>}
+                </div>
             </div>
             <div>
                 <h3> Newest Passwords</h3>
-                {elm?.password?.map((e:any, i: number) : JSX.Element => (
-                    <div key={i+"dash_passwd"}>
-                        <p><strong>{e?.name}</strong></p>
-                        <p>
-                            {e?.email}<br/>
-                            {e?.username}<br/>
-                            {e?.description}
-                        </p>
+                <div style={note.container}>
+                    {elm?.password?.map((e:any, i: number) : JSX.Element => (
+                        <div style={note.note} key={i+"dash_passwd"}>
+                            <p>
+                                <strong style={note.strong}>{e?.name}</strong><br/>
+                                {e?.email?<>{e.email}<br/></>:""}
+                                {e?.username?<>{e.username}<br/></>:""}
+                                {e?.description?<>{e.description}<br/></>:""}
+                            </p>
+                        </div>
+                    ))}
+                    {elm?.password.length===0?<p>Keine Passwörter</p>:<></>}
                     </div>
-                ))}
-                {elm?.password.length===0?<p>Keine Passwörter</p>:<></>}
             </div>
 
         </div>
@@ -71,3 +75,27 @@ function Dashboard(): JSX.Element {
 }
 
 export default Dashboard;
+
+const note : any = {
+    container : {
+        display: "inline-grid",
+        gridColumn: "2",
+        gridTemplateColumns: "auto auto auto",
+        columnGap: "5%",
+        rowGap: "5%",
+        width: "100%",
+    },
+    note : {
+        display: "inline-grid",
+        rowGap: "1px",
+        border: "solid 1px black",
+        borderRadius: "5px",
+        paddingLeft: "2vw",
+        width: "80%",
+    },
+    strong:{
+        borderBottom: "1px solid black",
+        fontSize: "big",
+        lineHeight: "2"
+    }
+}

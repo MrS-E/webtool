@@ -1,9 +1,9 @@
 import Form from '../components/Form.tsx'
 import Input from "../components/FormInput.tsx";
 import {useState} from "react";
-import fetch from "../classes/fetch.ts";
 import {useCookies} from "react-cookie";
 import {Link, NavigateFunction, useNavigate} from "react-router-dom";
+import {server} from "../variables.ts";
 
 
 function Login () :JSX.Element  {
@@ -12,13 +12,14 @@ function Login () :JSX.Element  {
     const [, setCookie] = useCookies(["token"]);
     const [active, setActive] = useState(true)
     const navigate: NavigateFunction = useNavigate()
+    const [loginError, setLoginError] = useState("")
 
     const handleSubmit=async () => {
         setActive(false)
-        new fetch("http://localhost:3000/auth", {
-            method: fetch.Method.POST,
-            headers: ({"Content-Type": "application/json"} as HeadersInit),
-            mode: fetch.Mode.CORS,
+        fetch(server+"/auth", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            mode: "cors",
             body: JSON.stringify({email:email, password:password})
         })
             .text()
@@ -39,6 +40,7 @@ function Login () :JSX.Element  {
             <Form button={"Anmelden"} action={handleSubmit} active={active}>
                 <Input type={"email"} name={"email"} label={"E-Mail"} value={setEmail}/>
                 <Input type={"password"} name={"password"} label={"Passwort"} value={setPassword}/>
+                <p>{loginError}</p>
                 <p>Noch kein Konto? <Link to={"/registrieren"}>Jetzt Registrieren</Link></p>
             </Form>
         </div>

@@ -1,8 +1,8 @@
 import Form from "../components/Form.tsx";
 import FormInput from "../components/FormInput.tsx";
 import {useState} from "react";
-import fetch from "../classes/fetch.ts";
 import {useNavigate, Link, NavigateFunction} from "react-router-dom";
+import {server} from "../variables.ts";
 
 function Register(): JSX.Element {
     const [firstname, setFirstname] = useState()
@@ -14,18 +14,18 @@ function Register(): JSX.Element {
 
     const handleSubmit = async () => {
         setActive(false)
-        new fetch("http://localhost:3000/user", {
-            method: fetch.Method.POST,
-            headers: ({"Content-Type": "application/json"} as HeadersInit),
-            mode: fetch.Mode.CORS,
+        fetch(server+"/user", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            mode: "cors",
             body: JSON.stringify({firstname:firstname, lastname:lastname, email:email, auth:auth})
         })
-        .exec()
         .then(() => {
             navigate("/login")
         })
-        .finally(() => setActive(true))
         .catch(e => console.error(e))
+        .finally(() => setActive(true))
+
     }
 
     return (

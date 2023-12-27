@@ -22,13 +22,18 @@ function Login () :JSX.Element  {
             mode: "cors",
             body: JSON.stringify({email:email, password:password})
         })
-            .text()
+            .then(res => res.status === 401 ? "" : res.text())
             .then(res => {
-                setCookie("token", res, {path: "/"})
-                navigate("/")
-                console.log(res)
+                if(res.length>0) {
+                    setCookie("token", res, {path: "/"})
+                    console.log(res)
+                    navigate("/")
+                }else{
+                    setLoginError("E-Mail oder Passwort ist inkorrekt.")
+                }
             })
-            .catch(e => console.error(e))
+            .catch(e => {console.error(e);
+                setLoginError("Etwas ist katastrophal schief gelaufen. Bitte versuchen Sie es etwas später wieder.")})
             .finally(() => {
                 setActive(true)
             })

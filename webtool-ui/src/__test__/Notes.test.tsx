@@ -8,19 +8,6 @@ jest.mock('react-cookie', () => ({
     useCookies: jest.fn(() => [{ token: 'mocked-token' }, jest.fn()]),
 }));
 
-jest.mock('crypto-js', () => ({
-    AES: {
-        encrypt: jest.fn(() => ({ toString: jest.fn() })),
-        decrypt: jest.fn(() => ({ toString: jest.fn() })),
-    },
-    enc: {
-        Utf8: {
-            parse: jest.fn(),
-        },
-    },
-    MD5: jest.fn(() => ({ toString: jest.fn() })),
-}));
-
 jest.mock('react-router-dom', () => ({
     useNavigate: jest.fn(),
 }));

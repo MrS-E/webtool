@@ -73,7 +73,7 @@ function Password(): JSX.Element {
 
     const handleAdd = () => {
         fetch(server+"/passwords?rand" + Math.random(), {mode: "cors", method: "POST", headers: {"authorization": cookies.token, "Content-Type": "application/json"}, body: JSON.stringify({...add, password: encrypt(add.password)})})
-            .then(res => res.status === 401 ? navigate("/login") : res.json())
+            .then(res => res.status === 401 ? navigate("/login") : res)
             .catch()
             .finally(() => {
                 setReload(reload + 1);
@@ -86,10 +86,7 @@ function Password(): JSX.Element {
         fetch(server+"/passwords/" + e.currentTarget["id"] + "?rand" + Math.random(), {mode: "cors", method: "GET", headers: {"authorization": cookies.token}})
             .then(res => res.status === 401 ? navigate("/login") : res.json())
             .then(async res => {
-                console.log(res)
-                console.log({...res, password: decrypt(res.password)})
-                setDetail({...res, password: decrypt(res.password)}) //fixme somehow password is always "" even if it's correctly decrypted in line 53; update somehow without any fix it works again, i don't understand how or why
-                console.log(detail)
+                setDetail({...res, password: decrypt(res.password)})
             })
             .catch()
             .finally(() => setDetailTrigger(true))

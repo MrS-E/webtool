@@ -38,6 +38,7 @@ describe('Password Component', () => {
 
     it('renders Password component', () => {
         act (()=> render(<Password />))
+        // @ts-ignore
         expect(screen.getByText('Passwort-Manager')).toBeInTheDocument();
     });
 
@@ -51,6 +52,7 @@ describe('Password Component', () => {
         );
         render(<Password />)
         await waitFor(() => expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining('/passwords'), expect.any(Object)));
+        // @ts-ignore
         await waitFor(()=> expect(screen.getByText('Site 1')).toBeInTheDocument())
     });
 
@@ -75,11 +77,13 @@ describe('Password Component', () => {
             })
         );
         act(()=>render(<Password />))
+        // @ts-ignore
         await waitFor(()=>expect(screen.getByText('Site 1')).toBeInTheDocument())
 
         userEvent.click(screen.getByText('Site 1'));
 
         await waitFor(() => expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining('/passwords/1'), expect.any(Object)));
+        // @ts-ignore
         expect(screen.getByText('Detail')).toBeInTheDocument();
     });
 
@@ -89,6 +93,7 @@ describe('Password Component', () => {
             json: () => Promise.resolve([{ id: '1', name: 'Site 1' }]),
             status: 200 }));
         render(<Password />);
+        // @ts-ignore
         await waitFor(()=>expect(screen.getByText('Site 1')).toBeInTheDocument())
         userEvent.click(screen.getByText('Site 1'));
         userEvent.click(screen.getAllByText('Bearbeiten')[0]);
@@ -103,6 +108,7 @@ describe('Password Component', () => {
             json: () => Promise.resolve([{ id: '1', name: 'Site 1' }]),
             status: 200 }));
         render(<Password />);
+        // @ts-ignore
         await waitFor(()=>expect(screen.getByText('Site 1')).toBeInTheDocument())
         userEvent.click(screen.getByText('Site 1'));
         userEvent.click(screen.getByText('Löschen'));

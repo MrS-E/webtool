@@ -22,7 +22,7 @@ function Note(): JSX.Element {
     useEffect(() => {
         fetch(server+"/notes", {mode: "cors", method: "GET", headers: {"authorization": cookies.token}})
             .then(res => res.status === 401 ? navigate("/login") : res.json())
-            .then(res => setNote([...res]))
+            .then(res => setNote(res))
             .catch()
             .finally(() => setReload(0))
 
@@ -30,7 +30,7 @@ function Note(): JSX.Element {
 
     const handleAdd = () => {
         fetch(server+"/notes", {mode: "cors", method: "POST", headers: {"authorization": cookies.token, "Content-Type": "application/json"}, body: JSON.stringify(add)})
-            .then(res => res.status === 401 ? navigate("/login") : res.json())
+            .then(res => res.status === 401 ? navigate("/login") : res)
             .catch()
             .finally(() => {
                 setReload(reload + 1);
@@ -40,7 +40,7 @@ function Note(): JSX.Element {
 
     const handleUpdate = () => {
         fetch(server+"/notes/" + updateData.id, {mode: "cors", method: "PUT", headers: {"authorization": cookies.token, "Content-Type": "application/json"}, body: JSON.stringify(updateData.update)})
-            .then(res => res.status === 401 ? navigate("/login") : res.json())
+            .then(res => res.status === 401 ? navigate("/login") : res)
             .catch()
             .finally(() => {
                 setReload(reload + 1);
@@ -75,7 +75,7 @@ function Note(): JSX.Element {
                                     <p>{e.description}</p>
                                 </div>
                                 <div style={update&&updateData.id==e.id ? {width: "25vw"} : {display: "none"}}> {/*fixme small screen form overflow*/}
-                                    <Form button={"Bearbeiten"} action={handleUpdate}>
+                                    <Form button={"Speichern"} action={handleUpdate}>
                                         <FormInput in={e.name} name={"name"} label={"Webseite"} type={"text"}
                                                    required={true}
                                                    value={(v: string) => {

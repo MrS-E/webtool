@@ -3,3 +3,6 @@ body{
     width: 100vw;
     margin: 0;
 }
+#root div{
+    padding: 10px;
+}

@@ -1,0 +1,33 @@
+version: "3.1"
+services:
+  mongo:
+    build: ./mongodb_rs
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: webtool
+      MONGO_REPLICA_HOST: localhost
+      MONGO_REPLICA_PORT: 27017
+    ports:
+      - 27017:27017
+    volumes:
+      - /:db
+  frontend:
+    build: ./webtool-ui
+    restart: on-failure
+    environment:
+      SERVER: "http://localhost:3000"
+    ports:
+      - 80:5173
+  backend:
+    build: ./webtool-be
+    restart: always
+    environment:
+      DATABASE_URL: "mongodb://admin:password@localhost:27017/webtool?authSource=admin"
+      JWT_SECRET: "DO NOT USE THIS VALUE. INSTEAD, CREATE A COMPLEX SECRET AND KEEP IT SAFE OUTSIDE OF THE SOURCE CODE."
+    ports:
+      - 3000:3000
+
+volumes:
+  db:

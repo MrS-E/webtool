@@ -12,12 +12,10 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - /:db
+      - db:/data/db
   frontend:
     build: ./webtool-ui
     restart: on-failure
-    environment:
-      SERVER: "http://localhost:3000"
     ports:
       - 80:5173
   backend:

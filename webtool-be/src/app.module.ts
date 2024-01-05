@@ -7,15 +7,9 @@ import { UserModule } from "./user/user.module";
 import { DashboardModule } from './dashboard/dashboard.module';
 import { NotesModule } from './notes/notes.module';
 import { PrismaService } from './prisma/prisma.service';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
 
 @Module({
-  imports: [PasswordsModule, AuthModule, UserModule, DashboardModule, NotesModule,
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'client'),
-      renderPath: ""
-    }),],
+  imports: [PasswordsModule, AuthModule, UserModule, DashboardModule, NotesModule],
   controllers: [AppController],
   providers: [AppService],
 })

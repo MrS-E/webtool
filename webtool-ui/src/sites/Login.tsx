@@ -4,7 +4,7 @@ import {useState} from "react";
 import {useCookies} from "react-cookie";
 import {Link, NavigateFunction, useNavigate} from "react-router-dom";
 import {server} from "../variables.ts";
-
+import './Login.css'
 
 function Login () :JSX.Element  {
     const [email, setEmail] = useState<string>("")
@@ -46,7 +46,7 @@ function Login () :JSX.Element  {
                 <Input type={"email"} name={"email"} label={"E-Mail"} value={setEmail}/>
                 <Input type={"password"} name={"password"} label={"Passwort"} value={setPassword}/>
                 <p>{loginError}</p>
-                <p>Noch kein Konto? <Link to={"/registrieren"}>Jetzt Registrieren</Link></p>
+                <p>Noch kein Konto? <Link to={"/registrieren"}><span>Jetzt Registrieren</span></Link></p>
             </Form>
         </div>
     );

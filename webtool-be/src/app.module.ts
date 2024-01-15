@@ -13,9 +13,9 @@ import { join } from 'path';
 @Module({
   imports: [PasswordsModule, AuthModule, UserModule, DashboardModule, NotesModule,
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'client'),
-      renderPath: ""
-    }),],
+      rootPath: join(__dirname, '..','..','webtool-ui', 'dist'),
+      serveRoot: '/',
+    })],
   controllers: [AppController],
   providers: [AppService],
 })
